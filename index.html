@@ -172,18 +172,8 @@
         .weather-carousel::-webkit-scrollbar { display: none; }
         .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; }
         
-        /* STILE MAPPE MIGLIORATO */
-        .wx-map-img { 
-            max-width: 100%; 
-            max-height: 100%; 
-            width: auto; 
-            height: auto; 
-            object-fit: contain; 
-            display: block; 
-            margin: 0 auto; 
-            border: 1px solid #ddd; /* Cornice sottile */
-            background: white;
-        }
+        /* STILE MAPPE */
+        .wx-map-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; }
         
         .btn-open-map { 
             background-color: #005EB8; 
@@ -194,13 +184,14 @@
             font-weight: bold; 
             font-size: 12px; 
             display: inline-block; 
-            margin-top: 10px; 
+            margin-top: 15px; 
             text-transform: uppercase; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
         }
         
         .weather-page:not(#wx-page-0) { 
             display: flex; 
+            flex-direction: column; /* Per impilare immagine e bottone */
             justify-content: center; 
             align-items: center; 
             height: 100%; 
@@ -243,6 +234,21 @@
 </head>
 <body>
 
+    <script>
+        (function() {
+            var pass = localStorage.getItem('efb_pass');
+            if (pass !== "Ryanair737") { 
+                var userIn = prompt("ENTER PASSWORD:");
+                if (userIn === "Ryanair737") {
+                    localStorage.setItem('efb_pass', userIn);
+                } else {
+                    document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
+                    throw new Error("Access Denied");
+                }
+            }
+        })();
+    </script>
+
     <div id="page-home">
         <div id="home-date-header"></div>
         <div class="section-box">
@@ -274,7 +280,7 @@
 
             <div class="modal-desc" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
                 <strong>Manual Import (Backup):</strong><br>
-                1. <a href="https://www.simbrief.com/api/xml.fetcher.php?userid=487768&json=1&static=1" target="_blank" style="color:#007aff;">Click here to open data</a><br>
+                1. <a href="#" id="manual-link" target="_blank" style="color:#007aff;">Click here to open data</a> (Requires Pilot ID above)<br>
                 2. Select All & Copy<br>
                 3. Paste below:
             </div>
@@ -367,20 +373,35 @@
     <script>
         var datiVoloGlobali = null;
 
-        // Auto Date (English Format for Consistency)
         window.onload = function() {
             let d = new Date();
             // Using en-GB to get dd/mm/yyyy
             document.getElementById('home-date-header').innerText = d.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Restore saved username
+            let savedUser = localStorage.getItem('sb_username');
+            if(savedUser) {
+                document.getElementById('sb-username').value = savedUser;
+                updateManualLink(savedUser);
+            }
         };
 
-        function apriModal() { document.getElementById('import-modal').style.display = 'flex'; document.getElementById('json-input').value = ""; }
-        function chiudiModal() { document.getElementById('import-modal').style.display = 'none'; }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            let savedUser = localStorage.getItem('sb_username');
-            if(savedUser) document.getElementById('sb-username').value = savedUser;
+        // Aggiorna il link manuale quando l'utente scrive l'ID
+        document.getElementById('sb-username').addEventListener('input', function(e) {
+            updateManualLink(e.target.value);
         });
+
+        function updateManualLink(id) {
+            let link = document.getElementById('manual-link');
+            if(id) {
+                link.href = `https://www.simbrief.com/api/xml.fetcher.php?userid=${id}&json=1`;
+            } else {
+                link.href = "#";
+            }
+        }
+
+        function apriModal() { document.getElementById('import-modal').style.display = 'flex'; }
+        function chiudiModal() { document.getElementById('import-modal').style.display = 'none'; }
 
         async function scaricaDaSimBrief() {
             let username = document.getElementById('sb-username').value.trim();
@@ -657,27 +678,51 @@
                 }
             }
 
+            // MAPPE (LINK CORRETTO E PULITO)
             if (data.images) {
                 let dir = data.images.directory || "";
-                dir = dir.replace("http://www.simbrief.com", "").replace("https://www.simbrief.com", "");
+                
+                // PULIZIA DEL PERCORSO: Rimuove dominio se c'è, assicura slash iniziali e finali corretti
+                dir = dir.replace("https://www.simbrief.com", "").replace("http://www.simbrief.com", "");
                 if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
                 if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
+
                 let finalBaseUrl = "https://www.simbrief.com" + dir;
 
                 const setMap = (pageId, filename) => {
                     let page = document.getElementById(pageId);
                     if(page && filename) {
                         let fullUrl = finalBaseUrl + filename;
-                        let htmlContent = `<div style="display:flex; flex-direction:column; align-items:center; height:100%; width:100%;"><div style="flex-grow:1; width:100%; display:flex; justify-content:center; align-items:center; overflow:hidden;"><img src="${fullUrl}" class="wx-map-img" alt="Mappa" referrerpolicy="no-referrer"></div><div style="padding:10px; flex-shrink:0;"><a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a></div></div>`;
+                        
+                        // INIETTA HTML FORZATO: IMMAGINE + BOTTONE "OPEN EXTERNAL MAP" SEMPRE VISIBILE
+                        let htmlContent = `
+                            <div style="display:flex; flex-direction:column; align-items:center; height:100%; width:100%;">
+                                <div style="flex-grow:1; width:100%; display:flex; justify-content:center; align-items:center; overflow:hidden;">
+                                    <img src="${fullUrl}" 
+                                         class="wx-map-img" 
+                                         alt="Map Loading..." 
+                                         referrerpolicy="no-referrer">
+                                </div>
+                                <div style="padding:10px; flex-shrink:0;">
+                                    <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                                </div>
+                            </div>
+                        `;
                         page.innerHTML = htmlContent;
                     }
                 };
+
                 if (data.images.sigwx && data.images.sigwx.length > 0) setMap('wx-page-1', data.images.sigwx[0]);
                 if (data.images.sigwx && data.images.sigwx.length > 1) setMap('wx-page-2', data.images.sigwx[1]);
+
                 if (data.images.wind && data.images.wind.length > 0) setMap('wx-page-3', data.images.wind[0]);
                 if (data.images.wind && data.images.wind.length > 1) setMap('wx-page-4', data.images.wind[1]);
                 if (data.images.wind && data.images.wind.length > 2) setMap('wx-page-5', data.images.wind[2]);
-                if (data.images.vertical) { let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical; setMap('wx-page-6', vertImg); }
+
+                if (data.images.vertical) {
+                    let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical;
+                    setMap('wx-page-6', vertImg);
+                }
             }
         }
 
