@@ -286,6 +286,7 @@
         var datiVoloGlobali = null;
 
         window.onload = function() {
+            // DATE FIX (DD/MM/YYYY Manual)
             let d = new Date();
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
@@ -620,8 +621,8 @@
             injectMap('wx-page-4', 'WINDS34000.gif', 'WIND FL340');
             injectMap('wx-page-5', 'WINDS39000.gif', 'WIND FL390');
             
-            // Profilo Verticale
-            injectMap('wx-page-6', 'VERTICAL.gif', 'VERTICAL PROF');
+            // Profilo Verticale - Modificato in PROFILE.gif
+            injectMap('wx-page-6', 'PROFILE.gif', 'VERTICAL PROF');
         }
 
         function creaBoxMeteo(label, codes, name, metar, taf, idUnico, elevation, stats, mTime, tTime, runwayHTML) {
