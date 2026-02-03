@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Flight App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+        /* BASE & FONT */
+        body { 
+            font-family: "Aptos Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; padding: 0; 
+            background: #F1F7FD; 
+            height: 100vh; display: flex; flex-direction: column; 
+        }
+        .hidden { display: none !important; }
+
+        /* --- STILE TABELLA HOME --- */
+        #page-home { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
+        
+        /* HEADER DATA */
+        #home-date-header {
+            color: #005EB8; 
+            font-size: 28px; 
+            font-weight: 300; 
+            margin-bottom: 5px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        
+        /* TITOLI SEZIONI */
+        .section-title { 
+            font-weight: 700; 
+            font-size: 14px; 
+            margin-bottom: 15px; 
+            color: #005EB8; 
+            border-bottom: 1px solid #f0f0f0; 
+            padding-bottom: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        /* TASTO REFRESH */
+        .btn-main-import {
+            background-color: #2687E5; 
+            color: white; border: none; 
+            padding: 4px 10px; 
+            border-radius: 15px; 
+            font-size: 10px; 
+            font-weight: bold; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .btn-main-import:hover { background-color: #0056b3; }
+
+        /* TABELLA FLIGHT INFO */
+        #flight-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        
+        #flight-table th { 
+            text-align: left; 
+            padding: 10px; 
+            border-bottom: 2px solid #e5e5ea; 
+            color: #005EB8; 
+            font-weight: normal; 
+            font-size: 11px; 
+            text-transform: uppercase; 
+        }
+        
+        #flight-table td { 
+            padding: 12px 10px; 
+            border-bottom: 1px solid #f2f2f7; 
+            color: #005EB8; 
+            font-weight: 600; 
+        }
+        #flight-table tr:hover { background-color: #f2f2f7; cursor: pointer; }
+
+        /* TABELLA CREW */
+        .crew-table { width: 100%; border-collapse: collapse; font-size: 13px; color: #005EB8; }
+        .crew-table td { padding: 8px 0; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
+        
+        .crew-role { color: #005EB8; font-weight: normal; width: 40px; font-size: 11px; opacity: 0.8; font-style: normal !important; } 
+        .crew-code { font-weight: 600; color: #005EB8; width: 80px; font-style: normal !important; } 
+        .crew-name { font-weight: 600; color: #005EB8; font-style: normal !important; }
+
+        /* MODAL */
+        #import-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 9999;
+            justify-content: center; align-items: center;
+        }
+        .modal-box {
+            background: white; width: 90%; max-width: 500px; padding: 25px; border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; gap: 15px;
+        }
+        .modal-title { font-weight: bold; font-size: 18px; }
+        .modal-desc { font-size: 13px; color: #666; line-height: 1.4; }
+        textarea#json-input {
+            width: 100%; height: 150px; padding: 10px; border: 1px solid #d1d1d6; border-radius: 8px;
+            font-family: monospace; font-size: 11px; resize: vertical; box-sizing: border-box;
+        }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-cancel { background: #e5e5ea; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-confirm { background: #34c759; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+        /* --- DETTAGLI PAGINA (HEADER) --- */
+        #page-details { display: flex; flex-direction: column; height: 100vh; background: #F1F7FD; }
+        
+        #details-top-bar { padding: 10px 15px; background: #F1F7FD; display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+        
+        .nav-row { display: flex; justify-content: space-between; align-items: center; position: relative; height: 30px; }
+        
+        .btn-back-custom { background: none; border: none; padding: 0; color: #2687E5; font-size: 14px; font-weight: normal; cursor: pointer; font-family: inherit; }
+        .btn-back-custom:hover { text-decoration: underline; }
+        
+        .page-title-center { 
+            position: absolute; left: 50%; transform: translateX(-50%); 
+            color: #000000; font-size: 17px; font-weight: 600; text-transform: uppercase; 
+            white-space: nowrap; z-index: 1;
+        }
+        
+        .flight-header-row { 
+            text-align: center; color: #005EB8; font-size: 13px; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+            padding-top: 5px; letter-spacing: 0.5px; font-weight: 500; 
+        }
+
+        #content-area { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
+        
+        /* STILE OFP TEXT */
+        #ofp-text-container {
+            background: white; padding: 15px; border-radius: 5px; 
+            font-family: "Courier New", Courier, monospace; 
+            font-size: 11px; white-space: pre-wrap; color: #333;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* --- BOTTOM NAV (FIXED HEIGHT) --- */
+        #bottom-nav { 
+            display: grid;
+            grid-template-columns: repeat(8, 1fr); /* 8 TAB ADESSO */
+            background: #F1F7FD; 
+            border-top: 1px solid #ccc; 
+            padding: 0;
+            height: 60px; 
+            z-index: 100;
+            flex-shrink: 0; /* FIX: NON SI SCHIACCIA MAI */
+        } 
+        
+        .nav-btn { 
+            background: transparent; border: none; display: flex; flex-direction: row; 
+            align-items: center; justify-content: center; gap: 4px; padding: 0 2px;
+            cursor: pointer; position: relative; border-top: 4px solid transparent; 
+            transition: all 0.1s;
+        }
+        
+        .nav-icon { width: 20px; height: 20px; fill: #005EB8; flex-shrink: 0; }
+
+        .nav-text {
+            font-size: 11px; font-weight: 400; text-transform: uppercase;
+            color: #D32F2F; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-btn:nth-of-type(2) .nav-text { color: #005EB8 !important; }
+
+        .nav-btn.active { border-top: 4px solid #005EB8; background-color: rgba(0,0,0,0.03); }
+
+        /* --- STILE WEATHER --- */
+        #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
+        .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
+        .weather-carousel::-webkit-scrollbar { display: none; }
+        .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; }
+        
+        .wx-map-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; }
+        .btn-open-map { background-color: #007aff; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; margin-top: 10px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .weather-page:not(#wx-page-0) { display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px; padding: 0; background-color: #F1F7FD; }
+
+        .weather-dots { display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); flex-shrink: 0; }
+        .dot { font-size: 18px; color: #ccc; cursor: pointer; transition: color 0.3s; line-height: 1; }
+        .dot.active { color: #1c1c1e; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
+
+        /* STILI METEO VARI */
+        .wx-airport-box { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
+        .wx-header-row { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .wx-info-left { display: flex; flex-direction: column; gap: 2px; }
+        .wx-label { font-size: 10px; color: #000000; font-weight: normal; text-transform: uppercase; }
+        .wx-codes { font-size: 14px; font-weight: 700; color: #005EB8; }
+        .wx-name { font-size: 12px; color: #000000; }
+        .btn-details { background: #F1F7FD; color: #000000; font-size: 11px; font-weight: bold; padding: 6px 12px; border-radius: 15px; cursor: pointer; border: none; display: flex; align-items: center; gap: 5px; }
+        .chevron { display: inline-block; width: 6px; height: 6px; border-right: 2px solid #000; border-bottom: 2px solid #000; transform: rotate(45deg); margin-bottom: 2px; transition: transform 0.2s ease; }
+        .chevron.up { transform: rotate(-135deg); margin-bottom: -2px; }
+        .wx-details-area { display: none; padding: 15px; background: #FFFFFF; border-top: 1px solid #f2f2f7; }
+        .wx-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 10px; }
+        .stat-box { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+        .stat-label { font-size: 10px; color: #666; text-transform: capitalize; font-weight: normal; }
+        .stat-value { font-size: 13px; color: #000000; font-weight: 600; }
+        .badge-weather { display: inline-block; padding: 2px 8px; border-radius: 6px; color: white; font-weight: bold; font-size: 11px; text-align: center; min-width: 35px; }
+        .bg-green { background-color: #388E3C; } .bg-red { background-color: #D32F2F; }   
+        .runway-section { border-top: 1px solid #eee; margin-top: 10px; padding-top: 15px; margin-bottom: 20px; display: flex; justify-content: space-around; }
+        .rwy-box { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .rwy-label { font-size: 10px; color: #666; font-weight: normal; }
+        .rwy-value { font-size: 13px; color: #000000; font-weight: 600; }
+        .wind-val { font-size: 13px; font-weight: normal; color: #000; }
+        .metar-container { border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; margin-bottom: 15px; font-family: inherit; }
+        .metar-header { background-color: #2687E5; color: white; font-size: 11px; font-weight: bold; padding: 6px 10px; display: flex; justify-content: space-between; text-transform: uppercase; }
+        .header-time { font-weight: normal; color: white; opacity: 0.9; }
+        .metar-body { background-color: #F1F7FD; color: #333; font-family: inherit; font-size: 12px; padding: 12px; white-space: pre-wrap; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div id="page-home">
+        <div id="home-date-header"></div>
+        <div class="section-box">
+            <div class="section-title">Flight info <button class="btn-main-import" onclick="apriModal()">Refresh</button></div>
+            <table id="flight-table">
+                <thead><tr><th>Flight</th><th>Callsign</th><th>DEP</th><th>ARR</th><th>STD</th><th>STA</th><th>Date</th><th>Reg</th><th>A/C</th><th>OFP</th></tr></thead>
+                <tbody id="flight-table-body"></tbody>
+            </table>
+            <div id="empty-state" style="text-align: center; padding: 30px; color: #999; font-size: 13px; font-style: italic;">Nessun volo caricato. Clicca su "Refresh".</div>
+        </div>
+        <div class="section-box">
+            <div class="section-title">Crew</div>
+            <div id="crew-content" style="color: #005EB8; font-size: 13px; font-style: italic;">Nessun membro equipaggio.</div>
+        </div>
+    </div>
+
+    <div id="import-modal">
+        <div class="modal-box">
+            <div class="modal-title">Importa Volo</div>
+            
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cce5ff;">
+                <label style="font-size: 11px; font-weight: bold; color: #005EB8; display: block; margin-bottom: 5px;">SIMBRIEF PILOT ID / USERNAME</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="sb-username" placeholder="Es. 487768" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-weight: bold; color: #333;">
+                    <button onclick="scaricaDaSimBrief()" style="background: #005EB8; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-weight: bold; cursor: pointer;">SCARICA</button>
+                </div>
+                <div id="fetch-status" style="font-size: 10px; color: #666; margin-top: 5px; min-height: 15px;"></div>
+            </div>
+
+            <div class="modal-desc" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
+                Oppure incolla il JSON manualmente (Metodo Backup):
+            </div>
+            <textarea id="json-input" placeholder="{ ... }"></textarea>
+            
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="chiudiModal()">Chiudi</button>
+                <button class="btn-confirm" onclick="elaboraDatiManuali()">Processa Testo</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="page-details" class="hidden">
+        <div id="details-top-bar">
+            <div class="nav-row">
+                <button class="btn-back-custom" onclick="tornaHome()">&lt; Today's Flights</button>
+                <div id="dynamic-page-title" class="page-title-center">FLIGHT LOG</div>
+            </div>
+            <div id="recap-header" class="flight-header-row">HEADER</div>
+        </div>
+
+        <div id="content-area">
+            <div id="view-log" class="tab-view"><h2>FLIGHT LOG</h2><p>Contenuto...</p></div>
+            <div id="view-lid" class="tab-view hidden"><h2>LID</h2><p>Contenuto...</p></div>
+            <div id="view-fuel" class="tab-view hidden"><h2>FUEL</h2><p>Contenuto...</p></div>
+            <div id="view-wpt" class="tab-view hidden"><h2>WAYPOINTS</h2><p>Contenuto...</p></div>
+            
+            <div id="view-weather" class="tab-view hidden">
+                <div class="weather-carousel" id="wx-carousel" onscroll="aggiornaPallini()">
+                    <div class="weather-page" id="wx-page-0"></div><div class="weather-page" id="wx-page-1"></div><div class="weather-page" id="wx-page-2"></div><div class="weather-page" id="wx-page-3"></div><div class="weather-page" id="wx-page-4"></div><div class="weather-page" id="wx-page-5"></div><div class="weather-page" id="wx-page-6"></div>
+                </div>
+                <div class="weather-dots">
+                    <span class="dot active" onclick="vaiPaginaMeteo(0)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(1)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(2)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(3)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(4)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(5)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(6)">&#9670;</span>
+                </div>
+            </div>
+
+            <div id="view-notam" class="tab-view hidden"><h2>NOTAMS</h2><p>Contenuto...</p></div>
+            <div id="view-air" class="tab-view hidden"><h2>AIRCRAFT</h2><p>Contenuto...</p></div>
+            
+            <div id="view-ofp" class="tab-view hidden">
+                <div id="ofp-text-container">Caricamento OFP...</div>
+            </div>
+        </div>
+
+        <div id="bottom-nav">
+            <button class="nav-btn active" onclick="cambiaTab('view-log', this, 'FLIGHT LOG')">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M4 12h10M11 8l4 4-4 4" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M17 7h3v10h-3" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round"/>
+                </svg>
+                <span class="nav-text">Flight Log</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-lid', this, 'LID')">
+                <svg class="nav-icon" viewBox="0 0 24 24"><g transform="rotate(-45, 12, 12)"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></g></svg>
+                <span class="nav-text">LID</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-fuel', this, 'FUEL/FMC')">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2z" fill="#005EB8" fill-opacity="0.3"/>
+                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" transform="scale(0.5) translate(24, 24)" fill="#005EB8"/>
+                </svg>
+                <span class="nav-text">Fuel/FMC</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-wpt', this, 'WAYPOINTS')">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span class="nav-text">Waypoints</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-weather', this, 'WEATHER')">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <circle cx="18" cy="8" r="4" fill="#FFB300"/>
+                    <path d="M18.5 11C18.2 10.9 17.9 10.9 17.6 11C17.2 8.6 15.2 6.8 12.8 6.8C10.1 6.8 7.8 8.7 7.3 11.3C5.4 11.6 4 13.2 4 15.2C4 17.3 5.7 19 7.8 19H17.8C19.5 19 21 17.5 21 15.8C21 14.3 19.9 13 18.5 12.8V11Z" fill="#00B0FF"/>
+                </svg>
+                <span class="nav-text">Weather</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-notam', this, 'NOTAMS')">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                <span class="nav-text">Notams</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-air', this, 'AIRCRAFT')">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span class="nav-text">Aircraft</span>
+            </button>
+            <button class="nav-btn" onclick="cambiaTab('view-ofp', this, 'OFP')">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                <span class="nav-text">OFP</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        var datiVoloGlobali = null;
+
+        window.onload = function() {
+            let d = new Date();
+            let day = String(d.getDate()).padStart(2, '0');
+            let month = String(d.getMonth() + 1).padStart(2, '0'); 
+            let year = d.getFullYear();
+            let today = `${day}/${month}/${year}`;
+            document.getElementById('home-date-header').innerText = today;
+        };
+
+        function apriModal() { document.getElementById('import-modal').style.display = 'flex'; document.getElementById('json-input').value = ""; document.getElementById('json-input').focus(); }
+        function chiudiModal() { document.getElementById('import-modal').style.display = 'none'; }
+
+        function elaboraDati() {
+            var testo = document.getElementById('json-input').value.trim();
+            if(!testo) return;
+            var inizio = testo.indexOf('{');
+            var fine = testo.lastIndexOf('}');
+            if (inizio === -1 || fine === -1) { alert("Non trovo dati validi."); return; }
+            var testoPulito = testo.substring(inizio, fine + 1);
+            try { var data = JSON.parse(testoPulito); popolaApp(data); chiudiModal(); } catch (e) { alert("Errore lettura dati: " + e.message); }
+        }
+
+        function formatName(str) {
+            if (!str) return "";
+            return str.toLowerCase().split(' ').map(function(word) {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join(' ');
+        }
+
+        function popolaApp(data) {
+            datiVoloGlobali = data;
+            document.getElementById('empty-state').classList.add('hidden');
+
+            let flightNum = data.general.icao_airline + data.general.flight_number;
+            let callsign = data.atc.callsign;
+            let dep = data.origin.iata_code;
+            let arr = data.destination.iata_code;
+            let std = new Date(data.times.sched_out * 1000).toISOString().substr(11, 5);
+            let sta = new Date(data.times.sched_in * 1000).toISOString().substr(11, 5);
+            let date = new Date(data.times.sched_out * 1000).toISOString().substr(0, 10);
+            let reg = data.aircraft.reg;
+            let config = data.aircraft.name;
+            let release = data.general.release;
+
+            let tbody = document.getElementById('flight-table-body');
+            let riga = `
+                <tr onclick="apriVolo()">
+                    <td>${flightNum}</td>
+                    <td>${callsign}</td>
+                    <td>${dep}</td>
+                    <td>${arr}</td>
+                    <td>${std}</td>
+                    <td>${sta}</td>
+                    <td>${date}</td>
+                    <td>${reg}</td>
+                    <td>${config}</td>
+                    <td style="text-align:center;">${release}</td>
+                </tr>
+            `;
+            tbody.innerHTML = riga;
+            
+            let crewHtml = '<table class="crew-table"><tbody>';
+            const genCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
+            let crew = data.crew || {};
+            if (crew.cpt) { crewHtml += `<tr><td class="crew-role">CP</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.cpt)}</td></tr>`; }
+            if (crew.fo) { crewHtml += `<tr><td class="crew-role">FO</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.fo)}</td></tr>`; }
+            if (crew.pu) { crewHtml += `<tr><td class="crew-role">PU</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.pu)}</td></tr>`; }
+            if (crew.fa && Array.isArray(crew.fa)) {
+                crew.fa.forEach(name => {
+                    crewHtml += `<tr><td class="crew-role">FA</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(name)}</td></tr>`;
+                });
+            }
+            crewHtml += '</tbody></table>';
+            document.getElementById('crew-content').innerHTML = crewHtml;
+
+            // CARICA OFP TESTO
+            let ofpText = data.text.plan_html || (data.text.plan_text ? `<pre>${data.text.plan_text}</pre>` : "OFP non disponibile.");
+            document.getElementById('ofp-text-container').innerHTML = ofpText;
+
+            aggiornaMeteo(data);
+        }
+
+        function apriVolo() {
+            if (datiVoloGlobali) {
+                let d = new Date(datiVoloGlobali.times.sched_out * 1000);
+                let day = String(d.getDate()).padStart(2, '0');
+                let month = String(d.getMonth() + 1).padStart(2, '0'); 
+                let year = d.getFullYear();
+                let dateFormatted = `${day}/${month}/${year}`;
+                let std = d.toISOString().substr(11, 5);
+                let sta = new Date(datiVoloGlobali.times.sched_in * 1000).toISOString().substr(11, 5);
+                
+                let callsign = datiVoloGlobali.atc.callsign.toUpperCase();
+                let flightNum = (datiVoloGlobali.general.icao_airline + datiVoloGlobali.general.flight_number).toUpperCase();
+                let reg = datiVoloGlobali.aircraft.reg.toUpperCase();
+                let dep = datiVoloGlobali.origin.iata_code.toUpperCase();
+                let arr = datiVoloGlobali.destination.iata_code.toUpperCase();
+                let acType = datiVoloGlobali.aircraft.icaocode.toUpperCase();
+                let maxPax = ("Y" + datiVoloGlobali.aircraft.max_passengers).toUpperCase();
+                let ofpVer = ("OFP" + datiVoloGlobali.general.release).toUpperCase();
+
+                let headerHTML = `<b>${callsign}</b> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${acType} &nbsp; ${maxPax} &nbsp; ${ofpVer}`;
+                
+                document.getElementById('recap-header').innerHTML = headerHTML;
+            }
+            document.getElementById('page-home').classList.add('hidden');
+            document.getElementById('page-details').classList.remove('hidden');
+        }
+
+        function tornaHome() {
+            document.getElementById('page-details').classList.add('hidden');
+            document.getElementById('page-home').classList.remove('hidden');
+        }
+
+        function cambiaTab(idTab, bottone, titoloPagina) {
+            document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+            var el = document.getElementById(idTab);
+            el.classList.remove('hidden');
+            document.getElementById('dynamic-page-title').innerText = titoloPagina;
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            bottone.classList.add('active');
+        }
+
+        function vaiPaginaMeteo(indice) {
+            var carousel = document.getElementById('wx-carousel');
+            var width = carousel.offsetWidth;
+            carousel.scrollTo({ left: width * indice, behavior: 'smooth' });
+        }
+
+        function aggiornaPallini() {
+            var carousel = document.getElementById('wx-carousel');
+            var width = carousel.offsetWidth;
+            var scrollPos = carousel.scrollLeft;
+            var indice = Math.round(scrollPos / width);
+            var dots = document.getElementsByClassName('dot');
+            for (var i = 0; i < dots.length; i++) { dots[i].classList.remove('active'); }
+            if(dots[indice]) { dots[indice].classList.add('active'); }
+        }
+
+        function formatTime(input) {
+            if (!input) return "";
+            let d; if (!isNaN(input)) { d = new Date(input * 1000); } else { d = new Date(input); }
+            if (isNaN(d.getTime())) return input;
+            let day = d.getUTCDate();
+            let months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            let month = months[d.getUTCMonth()];
+            let hh = String(d.getUTCHours()).padStart(2, '0');
+            let mm = String(d.getUTCMinutes()).padStart(2, '0');
+            return `${day} ${month} at ${hh}:${mm} UTC`;
+        }
+
+        function analizzaMetar(metar, sbVis, sbCeil) {
+            let cat = "VMC"; let catClass = "bg-green";
+            let visDisplay = sbVis ? sbVis : "N/A";
+            let ceilDisplay = sbCeil ? sbCeil : "N/A";
+            let windDir = 0; let windSpd = 0;
+            if (metar) {
+                let windMatch = metar.match(/(\d{3}|VRB)(\d{2,3})(G\d{2,3})?KT/);
+                if (windMatch) { windDir = (windMatch[1] === "VRB") ? 0 : parseInt(windMatch[1]); windSpd = parseInt(windMatch[2]); }
+            }
+            if (!metar || metar === "N/A") return { cat: "N/A", catClass: "bg-green", ceiling: ceilDisplay, vis: visDisplay, wd: windDir, ws: windSpd };
+            let visValue = 9999; let ceilingValue = 99999;
+            if (metar.includes("CAVOK")) { visValue = 10000; ceilingValue = 99999; } else {
+                let visMatch = metar.match(/\b(\d{4})\b/);
+                if (visMatch) visValue = parseInt(visMatch[1]);
+                let cloudRegex = /(BKN|OVC)(\d{3})/g;
+                let match; let cloudsFound = [];
+                while ((match = cloudRegex.exec(metar)) !== null) { cloudsFound.push(parseInt(match[2]) * 100); }
+                if (cloudsFound.length > 0) ceilingValue = Math.min(...cloudsFound);
+            }
+            if (visValue < 5000 || ceilingValue < 1500) { cat = "IMC"; catClass = "bg-red"; }
+            return { cat, catClass, ceiling: ceilDisplay, vis: visDisplay, wd: windDir, ws: windSpd };
+        }
+
+        function calcolaVentoHtml(plannedRwy, windDir, windSpd) {
+            if(!plannedRwy) return { html: "-", rwyNum: "" };
+            let rwyNumStr = plannedRwy.replace(/\D/g, '');
+            let rwyNum = parseInt(rwyNumStr);
+            if(isNaN(rwyNum)) return { html: "-", rwyNum: plannedRwy };
+            let rwyHdg = rwyNum * 10;
+            let rad = (windDir - rwyHdg) * (Math.PI / 180);
+            let hw = Math.round(windSpd * Math.cos(rad));
+            let xw = Math.round(windSpd * Math.sin(rad));
+            let hwLabel = "";
+            if (hw > 0) hwLabel = `↓ ${Math.abs(hw)}`; else if (hw < 0) hwLabel = `↑ ${Math.abs(hw)}`; else hwLabel = "-";
+            let xwLabel = "";
+            if (xw > 0) xwLabel = `← ${Math.abs(xw)}`; else if (xw < 0) xwLabel = `→ ${Math.abs(xw)}`; else xwLabel = "-";
+            let html = `<span class="wind-val" style="color:#000000; font-weight:normal;">${hwLabel}</span> &nbsp; <span class="wind-val" style="color:#000000; font-weight:normal;">${xwLabel}</span>`;
+            return { html, rwyNum: plannedRwy };
+        }
+
+        function getRunwayInfoHtml(plannedRwy, windDir, windSpd, runwayLengthM) {
+            if (!plannedRwy) return "";
+            let windData = calcolaVentoHtml(plannedRwy, windDir, windSpd);
+            let dimStr = runwayLengthM ? runwayLengthM + "m" : "N/A";
+            return `<div class="runway-section"><div class="rwy-box"><span class="rwy-label">Planned Runway</span><span class="rwy-value">${plannedRwy}</span></div><div class="rwy-box"><span class="rwy-label">Wind Component</span><div style="display:flex; align-items:center;">${windData.html}</div></div><div class="rwy-box"><span class="rwy-label">Runway Length</span><span class="rwy-value">${dimStr}</span></div></div>`;
+        }
+
+        function extractRunwayLength(data, type, plannedRwy) {
+            if (data.tlr && data.tlr[type] && data.tlr[type].runway) {
+                let runways = data.tlr[type].runway;
+                if (!Array.isArray(runways)) runways = [runways];
+                let found = runways.find(r => r.identifier == plannedRwy);
+                if (found && found.length) return Math.round(parseInt(found.length) * 0.3048);
+            }
+            let airport = (type === 'takeoff') ? (data.origin.runway || data.origin.runways) : (data.destination.runway || data.destination.runways);
+            if (airport) {
+                if (!Array.isArray(airport)) airport = [airport];
+                let found = airport.find(r => (r.ident == plannedRwy) || (r.identifier == plannedRwy));
+                if (found) { let len = found.length_ft || found.length; if (len) return Math.round(parseInt(len) * 0.3048); }
+            }
+            return null;
+        }
+
+        function aggiornaMeteo(data) {
+            var container = document.getElementById('wx-page-0');
+            container.innerHTML = ""; 
+            if (data.weather) {
+                var w = data.weather;
+                let depPlan = data.origin.plan_rwy || data.origin.planned_runway;
+                if (!depPlan && data.tlr && data.tlr.takeoff && data.tlr.takeoff.conditions) { depPlan = data.tlr.takeoff.conditions.planned_runway; }
+                let depLenM = extractRunwayLength(data, 'takeoff', depPlan);
+                var depMetar = data.origin.metar || (w ? w.origin_metar : "") || "N/A";
+                var depTaf = data.origin.taf || (w ? w.origin_taf : "") || "N/A";
+                var depElev = data.origin.elevation + " ft";
+                var depMTime = formatTime(data.origin.metar_time);
+                var depTTime = formatTime(data.origin.taf_time);
+                var depStats = analizzaMetar(depMetar, data.origin.metar_visibility, data.origin.metar_ceiling);
+                var depRunwayHTML = getRunwayInfoHtml(depPlan, depStats.wd, depStats.ws, depLenM);
+                container.innerHTML += creaBoxMeteo("DEPARTURE AIRPORT", data.origin.icao_code + " / " + data.origin.iata_code, data.origin.name, depMetar, depTaf, "wx-dep", depElev, depStats, depMTime, depTTime, depRunwayHTML);
+
+                let destPlan = data.destination.plan_rwy || data.destination.planned_runway;
+                if (!destPlan && data.tlr && data.tlr.landing && data.tlr.landing.conditions) { destPlan = data.tlr.landing.conditions.planned_runway; }
+                let destLenM = extractRunwayLength(data, 'landing', destPlan);
+                var arrMetar = data.destination.metar || (w ? w.destination_metar : "") || "N/A";
+                var arrTaf = data.destination.taf || (w ? w.destination_taf : "") || "N/A";
+                var arrElev = data.destination.elevation + " ft";
+                var arrMTime = formatTime(data.destination.metar_time);
+                var arrTTime = formatTime(data.destination.taf_time);
+                var arrStats = analizzaMetar(arrMetar, data.destination.metar_visibility, data.destination.metar_ceiling);
+                var arrRunwayHTML = getRunwayInfoHtml(destPlan, arrStats.wd, arrStats.ws, destLenM);
+                container.innerHTML += creaBoxMeteo("ARRIVAL AIRPORT", data.destination.icao_code + " / " + data.destination.iata_code, data.destination.name, arrMetar, arrTaf, "wx-arr", arrElev, arrStats, arrMTime, arrTTime, arrRunwayHTML);
+
+                if (data.alternate) {
+                    let alternates = Array.isArray(data.alternate) ? data.alternate : [data.alternate];
+                    alternates.forEach((alt, index) => {
+                        let altMetar = alt.metar || (w ? w.alternate_metar : "") || "N/A";
+                        let altTaf = alt.taf || (w ? w.alternate_taf : "") || "N/A";
+                        let altElev = alt.elevation + " ft";
+                        let altMTime = formatTime(alt.metar_time);
+                        let altTTime = formatTime(alt.taf_time);
+                        var altStats = analizzaMetar(altMetar, alt.metar_visibility, alt.metar_ceiling);
+                        container.innerHTML += creaBoxMeteo(`ALTERNATE AIRPORT ${index + 1}`, alt.icao_code + " / " + alt.iata_code, alt.name, altMetar, altTaf, "wx-alt-" + index, altElev, altStats, altMTime, altTTime, "");
+                    });
+                }
+            }
+
+            if (data.images) {
+                let dir = data.images.directory || "";
+                dir = dir.replace("http://www.simbrief.com", "").replace("https://www.simbrief.com", "");
+                if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
+                if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
+                let finalBaseUrl = "https://www.simbrief.com" + dir;
+
+                const setMap = (pageId, filename) => {
+                    let page = document.getElementById(pageId);
+                    if(page && filename) {
+                        let fullUrl = finalBaseUrl + filename;
+                        let htmlContent = `<div style="display:flex; flex-direction:column; align-items:center; height:100%; width:100%;"><div style="flex-grow:1; width:100%; display:flex; justify-content:center; align-items:center; overflow:hidden;"><img src="${fullUrl}" class="wx-map-img" alt="Mappa" referrerpolicy="no-referrer"></div><div style="padding:10px; flex-shrink:0;"><a href="${fullUrl}" target="_blank" class="btn-open-map">APRI MAPPA ESTERNA</a></div></div>`;
+                        page.innerHTML = htmlContent;
+                    }
+                };
+                if (data.images.sigwx && data.images.sigwx.length > 0) setMap('wx-page-1', data.images.sigwx[0]);
+                if (data.images.sigwx && data.images.sigwx.length > 1) setMap('wx-page-2', data.images.sigwx[1]);
+                if (data.images.wind && data.images.wind.length > 0) setMap('wx-page-3', data.images.wind[0]);
+                if (data.images.wind && data.images.wind.length > 1) setMap('wx-page-4', data.images.wind[1]);
+                if (data.images.wind && data.images.wind.length > 2) setMap('wx-page-5', data.images.wind[2]);
+                if (data.images.vertical) { let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical; setMap('wx-page-6', vertImg); }
+            }
+        }
+
+        function creaBoxMeteo(label, codes, name, metar, taf, idUnico, elevation, stats, mTime, tTime, runwayHTML) {
+            return `<div class="wx-airport-box"><div class="wx-header-row"><div class="wx-info-left"><span class="wx-label">${label}</span><span class="wx-codes">${codes}</span><span class="wx-name">${name}</span></div><button class="btn-details" onclick="toggleMeteo('${idUnico}', this)">Details <span class="chevron"></span></button></div><div id="${idUnico}" class="wx-details-area"><div class="wx-stats-grid"><div class="stat-box"><span class="stat-label">Elevation</span><span class="stat-value">${elevation}</span></div><div class="stat-box"><span class="stat-label">Category</span><span class="badge-weather ${stats.catClass}">${stats.cat}</span></div><div class="stat-box"><span class="stat-label">Ceiling</span><span class="stat-value">${stats.ceiling}</span></div><div class="stat-box"><span class="stat-label">Visibility</span><span class="stat-value">${stats.vis}</span></div></div>${runwayHTML}<div class="metar-container"><div class="metar-header"><span>METAR</span><span class="header-time">${mTime}</span></div><div class="metar-body">${metar}</div></div><div class="metar-container"><div class="metar-header"><span>TAF</span><span class="header-time">${tTime}</span></div><div class="metar-body">${taf}</div></div></div></div>`;
+        }
+
+        function toggleMeteo(id, btn) {
+            var el = document.getElementById(id);
+            var chevron = btn.querySelector('.chevron');
+            if (el.style.display === "block") { el.style.display = "none"; chevron.classList.remove('up'); } else { el.style.display = "block"; chevron.classList.add('up'); }
+        }
+        // Al caricamento, controlla se c'è un username salvato
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedUser = localStorage.getItem('sb_username');
+            if(savedUser) document.getElementById('sb-username').value = savedUser;
+        });
+
+        async function scaricaDaSimBrief() {
+            let username = document.getElementById('sb-username').value.trim();
+            let statusDiv = document.getElementById('fetch-status');
+            
+            if(!username) { 
+                alert("Inserisci il tuo Pilot ID o Username di SimBrief."); 
+                return; 
+            }
+
+            // Salva username per la prossima volta
+            localStorage.setItem('sb_username', username);
+            statusDiv.innerText = "Connessione a SimBrief in corso...";
+            statusDiv.style.color = "#005EB8";
+
+            // URL API SimBrief
+            let url = `https://www.simbrief.com/api/xml.fetcher.php?userid=${username}&json=1`;
+
+            try {
+                let response = await fetch(url);
+                if (!response.ok) throw new Error("Errore di connessione");
+                
+                let data = await response.json();
+                
+                if (!data || !data.general) throw new Error("Dati volo non validi o OFP non generato.");
+
+                popolaApp(data);
+                statusDiv.innerText = "Volo caricato con successo!";
+                statusDiv.style.color = "green";
+                
+                setTimeout(chiudiModal, 500); // Chiude dopo mezzo secondo
+
+            } catch (e) {
+                statusDiv.innerText = "Errore: " + e.message;
+                statusDiv.style.color = "red";
+                alert("Errore importazione: " + e.message + "\n\nNota: Se sei in locale (file sul pc), questo potrebbe non funzionare per sicurezza del browser. Metti il file online.");
+            }
+        }
+
+        // Rinomina la vecchia funzione 'elaboraDati' in 'elaboraDatiManuali'
+        function elaboraDatiManuali() {
+            var testo = document.getElementById('json-input').value.trim();
+            if(!testo) return;
+            var inizio = testo.indexOf('{');
+            var fine = testo.lastIndexOf('}');
+            if (inizio === -1 || fine === -1) { alert("Non trovo dati validi."); return; }
+            var testoPulito = testo.substring(inizio, fine + 1);
+            try { var data = JSON.parse(testoPulito); popolaApp(data); chiudiModal(); } catch (e) { alert("Errore lettura dati: " + e.message); }
+        }
+    </script>
+</body>
+</html>
