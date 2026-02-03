@@ -100,19 +100,30 @@
         .nav-btn:nth-of-type(2) .nav-text { color: #005EB8 !important; }
         .nav-btn.active { border-top: 4px solid #005EB8; background-color: rgba(0,0,0,0.03); }
 
-        /* WEATHER */
+        /* WEATHER MAPS CSS - CRITICO PER VISUALIZZAZIONE */
         #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
-        .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; flex-shrink: 0; }
+        .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; flex-shrink: 0; position: relative; }
         
+        /* Contenitore Mappa che occupa spazio */
+        .map-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            min-height: 300px; /* Altezza minima garantita */
+        }
+
         .wx-map-img { 
             max-width: 98%; 
-            max-height: 80%; 
+            max-height: 70vh; 
             width: auto; 
             height: auto; 
             object-fit: contain; 
             display: block; 
-            margin: 0 auto; 
+            margin-bottom: 15px;
             border: 1px solid #ddd; 
             background: white; 
         }
@@ -125,23 +136,16 @@
             text-decoration: none; 
             font-weight: bold; 
             font-size: 12px; 
-            display: inline-block; 
-            margin-top: 15px; 
             text-transform: uppercase; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-            z-index: 99;
+            display: block; /* Visibile sempre */
         }
         
-        /* FIX PAGINE MAPPE: Display Flex forzato */
+        /* Centra contenuto pagine 1-6 */
         .weather-page:not(#wx-page-0) { 
-            display: flex !important; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100%; 
-            min-height: 300px; 
             background-color: #F1F7FD; 
         }
+
         .weather-dots { display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); flex-shrink: 0; }
         .dot { font-size: 18px; color: #ccc; cursor: pointer; transition: color 0.3s; line-height: 1; }
         .dot.active { color: #1c1c1e; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
@@ -178,11 +182,11 @@
 
     <script>
         (function() {
-            var pass = localStorage.getItem('efb_pass_v2'); // Changed Key to force reset
+            var pass = localStorage.getItem('efb_pass_v3'); // Forced Reset
             if (pass !== "Ryanair737") { 
                 var userIn = prompt("ENTER PASSWORD:");
                 if (userIn === "Ryanair737") {
-                    localStorage.setItem('efb_pass_v2', userIn);
+                    localStorage.setItem('efb_pass_v3', userIn);
                 } else {
                     document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
                     throw new Error("Access Denied");
@@ -310,12 +314,12 @@
         var datiVoloGlobali = null;
 
         window.onload = function() {
+            // DATE FIX (DD/MM/YYYY Manual)
             let d = new Date();
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
             let year = d.getFullYear();
             let today = `${day}/${month}/${year}`;
-            
             document.getElementById('home-date-header').innerText = today;
             
             let savedUser = localStorage.getItem('sb_username');
@@ -600,8 +604,11 @@
                 }
             }
 
-            // MAPPE - LOGICA FORZATA PER FAR APPARIRE I BOTTONI
+            // MAPPE - LOGICA BLINDATA (SENZA CONTROLLI CHE NASCONDONO)
+            // Se manca la directory, usa un default
             let dir = data.images && data.images.directory ? data.images.directory : "ofp/images/";
+            
+            // Pulizia URL
             dir = dir.replace("https://www.simbrief.com", "").replace("http://www.simbrief.com", "");
             if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
             if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
@@ -609,31 +616,46 @@
 
             const setMap = (pageId, filename) => {
                 let page = document.getElementById(pageId);
+                // Se la pagina esiste nell'HTML
                 if(page) {
-                    let fullUrl = finalBaseUrl + (filename || "unknown_map.gif");
-                    // Qui INIETTO SEMPRE L'HTML, anche se filename è vuoto (non dovrebbe succedere se il controllo fuori lo passa)
-                    // Il bottone viene creato e stampato a schermo
+                    // Se non c'è filename, usa un placeholder ma GENERA COMUNQUE L'HTML
+                    let finalFile = filename ? filename : "map_not_found.gif"; 
+                    let fullUrl = finalBaseUrl + finalFile;
+                    
                     let htmlContent = `
-                        <img src="${fullUrl}" class="wx-map-img" alt="Map" referrerpolicy="no-referrer">
-                        <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                        <div class="map-wrapper">
+                            <img src="${fullUrl}" 
+                                 class="wx-map-img" 
+                                 alt="Map Unavailable" 
+                                 referrerpolicy="no-referrer"
+                                 onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '<p style=\\'color:#666;font-size:12px;margin-bottom:10px;\\'>No Map Image Preview</p>')">
+                            <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                        </div>
                     `;
                     page.innerHTML = htmlContent;
                 }
             };
 
-            // CONTROLLI PER POPOLARE LE PAGINE
-            // Se l'array esiste, crea la pagina. Se non esiste, lascia vuoto.
-            if (data.images && data.images.sigwx && data.images.sigwx.length > 0) setMap('wx-page-1', data.images.sigwx[0]);
-            if (data.images && data.images.sigwx && data.images.sigwx.length > 1) setMap('wx-page-2', data.images.sigwx[1]);
+            // Riempiamo le pagine 1-6 INCONDIZIONATAMENTE
+            // Se i dati mancano, passiamo null o stringa vuota, la funzione setMap gestirà il fallback
+            let imgs = data.images || {};
+            let sigwx = imgs.sigwx || [];
+            let wind = imgs.wind || [];
+            let vert = imgs.vertical || []; // vertical può essere array o stringa, gestiamo dopo
 
-            if (data.images && data.images.wind && data.images.wind.length > 0) setMap('wx-page-3', data.images.wind[0]);
-            if (data.images && data.images.wind && data.images.wind.length > 1) setMap('wx-page-4', data.images.wind[1]);
-            if (data.images && data.images.wind && data.images.wind.length > 2) setMap('wx-page-5', data.images.wind[2]);
+            setMap('wx-page-1', sigwx[0] || "");
+            setMap('wx-page-2', sigwx[1] || "");
 
-            if (data.images && data.images.vertical) {
-                let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical;
-                setMap('wx-page-6', vertImg);
-            }
+            setMap('wx-page-3', wind[0] || "");
+            setMap('wx-page-4', wind[1] || "");
+            setMap('wx-page-5', wind[2] || "");
+
+            // Vertical può essere array o singola stringa
+            let vertFile = "";
+            if (Array.isArray(vert) && vert.length > 0) vertFile = vert[0];
+            else if (typeof vert === 'string') vertFile = vert;
+            
+            setMap('wx-page-6', vertFile);
         }
 
         function creaBoxMeteo(label, codes, name, metar, taf, idUnico, elevation, stats, mTime, tTime, runwayHTML) {
