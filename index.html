@@ -103,11 +103,45 @@
         /* WEATHER */
         #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
-        .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; }
+        .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; flex-shrink: 0; }
         
-        .wx-map-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border: 1px solid #ddd; background: white; }
-        .btn-open-map { background-color: #005EB8; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; margin-top: 15px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .weather-page:not(#wx-page-0) { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-height: 300px; padding: 0; background-color: #F1F7FD; }
+        .wx-map-img { 
+            max-width: 98%; 
+            max-height: 80%; 
+            width: auto; 
+            height: auto; 
+            object-fit: contain; 
+            display: block; 
+            margin: 0 auto; 
+            border: 1px solid #ddd; 
+            background: white; 
+        }
+        
+        .btn-open-map { 
+            background-color: #005EB8; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 12px; 
+            display: inline-block; 
+            margin-top: 15px; 
+            text-transform: uppercase; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            z-index: 99;
+        }
+        
+        /* FIX PAGINE MAPPE: Display Flex forzato */
+        .weather-page:not(#wx-page-0) { 
+            display: flex !important; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100%; 
+            min-height: 300px; 
+            background-color: #F1F7FD; 
+        }
         .weather-dots { display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); flex-shrink: 0; }
         .dot { font-size: 18px; color: #ccc; cursor: pointer; transition: color 0.3s; line-height: 1; }
         .dot.active { color: #1c1c1e; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
@@ -144,11 +178,11 @@
 
     <script>
         (function() {
-            var pass = localStorage.getItem('efb_pass');
+            var pass = localStorage.getItem('efb_pass_v2'); // Changed Key to force reset
             if (pass !== "Ryanair737") { 
                 var userIn = prompt("ENTER PASSWORD:");
                 if (userIn === "Ryanair737") {
-                    localStorage.setItem('efb_pass', userIn);
+                    localStorage.setItem('efb_pass_v2', userIn);
                 } else {
                     document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
                     throw new Error("Access Denied");
@@ -227,30 +261,18 @@
                     <div class="weather-page" id="wx-page-6"></div>
                 </div>
                 <div class="weather-dots">
-                    <span class="dot active" onclick="vaiPaginaMeteo(0)">&#9670;</span>
-                    <span class="dot" onclick="vaiPaginaMeteo(1)">&#9670;</span>
-                    <span class="dot" onclick="vaiPaginaMeteo(2)">&#9670;</span>
-                    <span class="dot" onclick="vaiPaginaMeteo(3)">&#9670;</span>
-                    <span class="dot" onclick="vaiPaginaMeteo(4)">&#9670;</span>
-                    <span class="dot" onclick="vaiPaginaMeteo(5)">&#9670;</span>
-                    <span class="dot" onclick="vaiPaginaMeteo(6)">&#9670;</span>
+                    <span class="dot active" onclick="vaiPaginaMeteo(0)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(1)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(2)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(3)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(4)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(5)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(6)">&#9670;</span>
                 </div>
             </div>
 
             <div id="view-notam" class="tab-view hidden"><h2>NOTAMS</h2><p>Content...</p></div>
             <div id="view-air" class="tab-view hidden"><h2>AIRCRAFT</h2><p>Content...</p></div>
-            
-            <div id="view-ofp" class="tab-view hidden">
-                <div id="ofp-text-container">Loading OFP...</div>
-            </div>
+            <div id="view-ofp" class="tab-view hidden"><div id="ofp-text-container">Loading OFP...</div></div>
         </div>
 
         <div id="bottom-nav">
             <button class="nav-btn active" onclick="cambiaTab('view-log', this, 'FLIGHT LOG')">
-                <svg class="nav-icon" viewBox="0 0 24 24">
-                    <path d="M4 12h10M11 8l4 4-4 4" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M19 7v10h2" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round"/>
-                </svg>
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 12h10M11 8l4 4-4 4" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 7v10h2" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
                 <span class="nav-text">Flight Log</span>
             </button>
             <button class="nav-btn" onclick="cambiaTab('view-lid', this, 'LID')">
@@ -258,10 +280,7 @@
                 <span class="nav-text">LID</span>
             </button>
             <button class="nav-btn" onclick="cambiaTab('view-fuel', this, 'FUEL/FMC')">
-                <svg class="nav-icon" viewBox="0 0 24 24">
-                    <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2z" fill="#005EB8" fill-opacity="0.3"/>
-                    <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" transform="scale(0.5) translate(24, 24)" fill="#005EB8"/>
-                </svg>
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2z" fill="#005EB8" fill-opacity="0.3"/><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" transform="scale(0.5) translate(24, 24)" fill="#005EB8"/></svg>
                 <span class="nav-text">Fuel/FMC</span>
             </button>
             <button class="nav-btn" onclick="cambiaTab('view-wpt', this, 'WAYPOINTS')">
@@ -269,10 +288,7 @@
                 <span class="nav-text">Waypoints</span>
             </button>
             <button class="nav-btn" onclick="cambiaTab('view-weather', this, 'WEATHER')">
-                <svg class="nav-icon" viewBox="0 0 24 24">
-                    <circle cx="18" cy="8" r="4" fill="#FFB300"/>
-                    <path d="M18.5 11C18.2 10.9 17.9 10.9 17.6 11C17.2 8.6 15.2 6.8 12.8 6.8C10.1 6.8 7.8 8.7 7.3 11.3C5.4 11.6 4 13.2 4 15.2C4 17.3 5.7 19 7.8 19H17.8C19.5 19 21 17.5 21 15.8C21 14.3 19.9 13 18.5 12.8V11Z" fill="#00B0FF"/>
-                </svg>
+                <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="18" cy="8" r="4" fill="#FFB300"/><path d="M18.5 11C18.2 10.9 17.9 10.9 17.6 11C17.2 8.6 15.2 6.8 12.8 6.8C10.1 6.8 7.8 8.7 7.3 11.3C5.4 11.6 4 13.2 4 15.2C4 17.3 5.7 19 7.8 19H17.8C19.5 19 21 17.5 21 15.8C21 14.3 19.9 13 18.5 12.8V11Z" fill="#00B0FF"/></svg>
                 <span class="nav-text">Weather</span>
             </button>
             <button class="nav-btn" onclick="cambiaTab('view-notam', this, 'NOTAMS')">
@@ -299,6 +315,7 @@
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
             let year = d.getFullYear();
             let today = `${day}/${month}/${year}`;
+            
             document.getElementById('home-date-header').innerText = today;
             
             let savedUser = localStorage.getItem('sb_username');
@@ -417,32 +434,20 @@
             let ofpText = data.text.plan_html || (data.text.plan_text ? `<pre>${data.text.plan_text}</pre>` : "OFP not available.");
             document.getElementById('ofp-text-container').innerHTML = ofpText;
 
+            // Header Recap
+            let d = new Date(data.times.sched_out * 1000);
+            let day = String(d.getDate()).padStart(2, '0');
+            let month = String(d.getMonth() + 1).padStart(2, '0');
+            let year = d.getFullYear();
+            let dateFormatted = `${day}/${month}/${year}`;
+            
+            let headerHTML = `<b>${callsign}</b> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${data.aircraft.icaocode} &nbsp; Y${data.aircraft.max_passengers} &nbsp; OFP${release}`;
+            document.getElementById('recap-header').innerHTML = headerHTML;
+
             aggiornaMeteo(data);
         }
 
         function apriVolo() {
-            if (datiVoloGlobali) {
-                let d = new Date(datiVoloGlobali.times.sched_out * 1000);
-                let day = String(d.getDate()).padStart(2, '0');
-                let month = String(d.getMonth() + 1).padStart(2, '0'); 
-                let year = d.getFullYear();
-                let dateFormatted = `${day}/${month}/${year}`;
-                let std = d.toISOString().substr(11, 5);
-                let sta = new Date(datiVoloGlobali.times.sched_in * 1000).toISOString().substr(11, 5);
-                
-                let callsign = datiVoloGlobali.atc.callsign.toUpperCase();
-                let flightNum = (datiVoloGlobali.general.icao_airline + datiVoloGlobali.general.flight_number).toUpperCase();
-                let reg = datiVoloGlobali.aircraft.reg.toUpperCase();
-                let dep = datiVoloGlobali.origin.iata_code.toUpperCase();
-                let arr = datiVoloGlobali.destination.iata_code.toUpperCase();
-                let acType = datiVoloGlobali.aircraft.icaocode.toUpperCase();
-                let maxPax = ("Y" + datiVoloGlobali.aircraft.max_passengers).toUpperCase();
-                let ofpVer = ("OFP" + datiVoloGlobali.general.release).toUpperCase();
-
-                let headerHTML = `<b>${callsign}</b> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${acType} &nbsp; ${maxPax} &nbsp; ${ofpVer}`;
-                
-                document.getElementById('recap-header').innerHTML = headerHTML;
-            }
             document.getElementById('page-home').classList.add('hidden');
             document.getElementById('page-details').classList.remove('hidden');
         }
@@ -595,35 +600,39 @@
                 }
             }
 
-            // MAPPE - LOGICA BLINDATA
-            if (data.images) {
-                let dir = data.images.directory || "";
-                dir = dir.replace("https://www.simbrief.com", "").replace("http://www.simbrief.com", "");
-                if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
-                if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
-                let finalBaseUrl = "https://www.simbrief.com" + dir;
+            // MAPPE - LOGICA FORZATA PER FAR APPARIRE I BOTTONI
+            let dir = data.images && data.images.directory ? data.images.directory : "ofp/images/";
+            dir = dir.replace("https://www.simbrief.com", "").replace("http://www.simbrief.com", "");
+            if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
+            if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
+            let finalBaseUrl = "https://www.simbrief.com" + dir;
 
-                const setMap = (pageId, filename) => {
-                    let page = document.getElementById(pageId);
-                    if(page && filename) {
-                        let fullUrl = finalBaseUrl + filename;
-                        let htmlContent = `
-                            <img src="${fullUrl}" class="wx-map-img" alt="Map Loading..." referrerpolicy="no-referrer">
-                            <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
-                        `;
-                        page.innerHTML = htmlContent;
-                    }
-                };
-
-                if (data.images.sigwx && data.images.sigwx.length > 0) setMap('wx-page-1', data.images.sigwx[0]);
-                if (data.images.sigwx && data.images.sigwx.length > 1) setMap('wx-page-2', data.images.sigwx[1]);
-                if (data.images.wind && data.images.wind.length > 0) setMap('wx-page-3', data.images.wind[0]);
-                if (data.images.wind && data.images.wind.length > 1) setMap('wx-page-4', data.images.wind[1]);
-                if (data.images.wind && data.images.wind.length > 2) setMap('wx-page-5', data.images.wind[2]);
-                if (data.images.vertical) {
-                    let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical;
-                    setMap('wx-page-6', vertImg);
+            const setMap = (pageId, filename) => {
+                let page = document.getElementById(pageId);
+                if(page) {
+                    let fullUrl = finalBaseUrl + (filename || "unknown_map.gif");
+                    // Qui INIETTO SEMPRE L'HTML, anche se filename è vuoto (non dovrebbe succedere se il controllo fuori lo passa)
+                    // Il bottone viene creato e stampato a schermo
+                    let htmlContent = `
+                        <img src="${fullUrl}" class="wx-map-img" alt="Map" referrerpolicy="no-referrer">
+                        <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                    `;
+                    page.innerHTML = htmlContent;
                 }
+            };
+
+            // CONTROLLI PER POPOLARE LE PAGINE
+            // Se l'array esiste, crea la pagina. Se non esiste, lascia vuoto.
+            if (data.images && data.images.sigwx && data.images.sigwx.length > 0) setMap('wx-page-1', data.images.sigwx[0]);
+            if (data.images && data.images.sigwx && data.images.sigwx.length > 1) setMap('wx-page-2', data.images.sigwx[1]);
+
+            if (data.images && data.images.wind && data.images.wind.length > 0) setMap('wx-page-3', data.images.wind[0]);
+            if (data.images && data.images.wind && data.images.wind.length > 1) setMap('wx-page-4', data.images.wind[1]);
+            if (data.images && data.images.wind && data.images.wind.length > 2) setMap('wx-page-5', data.images.wind[2]);
+
+            if (data.images && data.images.vertical) {
+                let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical;
+                setMap('wx-page-6', vertImg);
             }
         }
 
