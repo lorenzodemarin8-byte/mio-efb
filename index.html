@@ -373,10 +373,15 @@
     <script>
         var datiVoloGlobali = null;
 
+        // AUTO DATE (DD/MM/YYYY) & RESTORE USER
         window.onload = function() {
             let d = new Date();
-            // Using en-GB to get dd/mm/yyyy
-            document.getElementById('home-date-header').innerText = d.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            let day = String(d.getDate()).padStart(2, '0');
+            let month = String(d.getMonth() + 1).padStart(2, '0'); 
+            let year = d.getFullYear();
+            let today = `${day}/${month}/${year}`;
+            
+            document.getElementById('home-date-header').innerText = today;
             
             // Restore saved username
             let savedUser = localStorage.getItem('sb_username');
