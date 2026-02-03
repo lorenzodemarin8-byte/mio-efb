@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Flight App</title>
@@ -14,7 +14,7 @@
         }
         .hidden { display: none !important; }
 
-        /* --- STILE TABELLA HOME --- */
+        /* --- HOME STYLES --- */
         #page-home { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         
         /* HEADER DATA */
@@ -28,7 +28,7 @@
 
         .section-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         
-        /* TITOLI SEZIONI */
+        /* SECTION TITLES */
         .section-title { 
             font-weight: 700; 
             font-size: 14px; 
@@ -41,7 +41,7 @@
             align-items: center; 
         }
 
-        /* TASTO REFRESH */
+        /* REFRESH BUTTON */
         .btn-main-import {
             background-color: #2687E5; 
             color: white; border: none; 
@@ -53,7 +53,7 @@
         }
         .btn-main-import:hover { background-color: #0056b3; }
 
-        /* TABELLA FLIGHT INFO */
+        /* FLIGHT TABLE */
         #flight-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
         
         #flight-table th { 
@@ -74,7 +74,7 @@
         }
         #flight-table tr:hover { background-color: #f2f2f7; cursor: pointer; }
 
-        /* TABELLA CREW */
+        /* CREW TABLE */
         .crew-table { width: 100%; border-collapse: collapse; font-size: 13px; color: #005EB8; }
         .crew-table td { padding: 8px 0; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
         
@@ -103,7 +103,7 @@
         .btn-cancel { background: #e5e5ea; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-confirm { background: #34c759; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* --- DETTAGLI PAGINA (HEADER) --- */
+        /* --- PAGE DETAILS (HEADER) --- */
         #page-details { display: flex; flex-direction: column; height: 100vh; background: #F1F7FD; }
         
         #details-top-bar { padding: 10px 15px; background: #F1F7FD; display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
@@ -127,7 +127,7 @@
 
         #content-area { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
         
-        /* STILE OFP TEXT */
+        /* OFP TEXT STYLE */
         #ofp-text-container {
             background: white; padding: 15px; border-radius: 5px; 
             font-family: "Courier New", Courier, monospace; 
@@ -135,16 +135,16 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* --- BOTTOM NAV (FIXED HEIGHT) --- */
+        /* --- BOTTOM NAV --- */
         #bottom-nav { 
             display: grid;
-            grid-template-columns: repeat(8, 1fr); /* 8 TAB ADESSO */
+            grid-template-columns: repeat(8, 1fr); 
             background: #F1F7FD; 
             border-top: 1px solid #ccc; 
             padding: 0;
             height: 60px; 
             z-index: 100;
-            flex-shrink: 0; /* FIX: NON SI SCHIACCIA MAI */
+            flex-shrink: 0; 
         } 
         
         .nav-btn { 
@@ -166,21 +166,54 @@
 
         .nav-btn.active { border-top: 4px solid #005EB8; background-color: rgba(0,0,0,0.03); }
 
-        /* --- STILE WEATHER --- */
+        /* --- WEATHER STYLES --- */
         #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
         .weather-carousel::-webkit-scrollbar { display: none; }
         .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; }
         
-        .wx-map-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; }
-        .btn-open-map { background-color: #007aff; color: white; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; margin-top: 10px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .weather-page:not(#wx-page-0) { display: flex; justify-content: center; align-items: center; height: 100%; min-height: 300px; padding: 0; background-color: #F1F7FD; }
+        /* STILE MAPPE MIGLIORATO */
+        .wx-map-img { 
+            max-width: 100%; 
+            max-height: 100%; 
+            width: auto; 
+            height: auto; 
+            object-fit: contain; 
+            display: block; 
+            margin: 0 auto; 
+            border: 1px solid #ddd; /* Cornice sottile */
+            background: white;
+        }
+        
+        .btn-open-map { 
+            background-color: #005EB8; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 8px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 12px; 
+            display: inline-block; 
+            margin-top: 10px; 
+            text-transform: uppercase; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+        }
+        
+        .weather-page:not(#wx-page-0) { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100%; 
+            min-height: 300px; 
+            padding: 0; 
+            background-color: #F1F7FD; 
+        }
 
         .weather-dots { display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); flex-shrink: 0; }
         .dot { font-size: 18px; color: #ccc; cursor: pointer; transition: color 0.3s; line-height: 1; }
         .dot.active { color: #1c1c1e; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
 
-        /* STILI METEO VARI */
+        /* WX BOXES */
         .wx-airport-box { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
         .wx-header-row { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .wx-info-left { display: flex; flex-direction: column; gap: 2px; }
@@ -218,38 +251,40 @@
                 <thead><tr><th>Flight</th><th>Callsign</th><th>DEP</th><th>ARR</th><th>STD</th><th>STA</th><th>Date</th><th>Reg</th><th>A/C</th><th>OFP</th></tr></thead>
                 <tbody id="flight-table-body"></tbody>
             </table>
-            <div id="empty-state" style="text-align: center; padding: 30px; color: #999; font-size: 13px; font-style: italic;">Nessun volo caricato. Clicca su "Refresh".</div>
+            <div id="empty-state" style="text-align: center; padding: 30px; color: #999; font-size: 13px; font-style: italic;">No flight loaded. Click "Refresh".</div>
         </div>
         <div class="section-box">
             <div class="section-title">Crew</div>
-            <div id="crew-content" style="color: #005EB8; font-size: 13px; font-style: italic;">Nessun membro equipaggio.</div>
+            <div id="crew-content" style="color: #005EB8; font-size: 13px; font-style: italic;">No crew members.</div>
         </div>
     </div>
 
     <div id="import-modal">
         <div class="modal-box">
-            <div class="modal-title">Importa Volo</div>
+            <div class="modal-title">Import from SimBrief</div>
             
             <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cce5ff;">
                 <label style="font-size: 11px; font-weight: bold; color: #005EB8; display: block; margin-bottom: 5px;">SIMBRIEF PILOT ID / USERNAME</label>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="sb-username" placeholder="Es. 487768" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-weight: bold; color: #333;">
-                    <button onclick="scaricaDaSimBrief()" style="background: #005EB8; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-weight: bold; cursor: pointer;">SCARICA</button>
+                    <input type="text" id="sb-username" placeholder="e.g. 487768" style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 5px; font-weight: bold; color: #333;">
+                    <button onclick="scaricaDaSimBrief()" style="background: #005EB8; color: white; border: none; padding: 8px 12px; border-radius: 5px; font-weight: bold; cursor: pointer;">FETCH</button>
                 </div>
                 <div id="fetch-status" style="font-size: 10px; color: #666; margin-top: 5px; min-height: 15px;"></div>
             </div>
 
             <div class="modal-desc" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
-                Oppure incolla il JSON manualmente (Metodo Backup):
+                <strong>Manual Import (Backup):</strong><br>
+                1. <a href="https://www.simbrief.com/api/xml.fetcher.php?userid=487768&json=1&static=1" target="_blank" style="color:#007aff;">Click here to open data</a><br>
+                2. Select All & Copy<br>
+                3. Paste below:
             </div>
             <textarea id="json-input" placeholder="{ ... }"></textarea>
             
             <div class="modal-actions">
-                <button class="btn-cancel" onclick="chiudiModal()">Chiudi</button>
-                <button class="btn-confirm" onclick="elaboraDatiManuali()">Processa Testo</button>
+                <button class="btn-cancel" onclick="chiudiModal()">Close</button>
+                <button class="btn-confirm" onclick="elaboraDatiManuali()">Load Flight</button>
             </div>
         </div>
-    </div>
     </div>
 
     <div id="page-details" class="hidden">
@@ -262,10 +297,10 @@
         </div>
 
         <div id="content-area">
-            <div id="view-log" class="tab-view"><h2>FLIGHT LOG</h2><p>Contenuto...</p></div>
-            <div id="view-lid" class="tab-view hidden"><h2>LID</h2><p>Contenuto...</p></div>
-            <div id="view-fuel" class="tab-view hidden"><h2>FUEL</h2><p>Contenuto...</p></div>
-            <div id="view-wpt" class="tab-view hidden"><h2>WAYPOINTS</h2><p>Contenuto...</p></div>
+            <div id="view-log" class="tab-view"><h2>FLIGHT LOG</h2><p>Content...</p></div>
+            <div id="view-lid" class="tab-view hidden"><h2>LID</h2><p>Content...</p></div>
+            <div id="view-fuel" class="tab-view hidden"><h2>FUEL</h2><p>Content...</p></div>
+            <div id="view-wpt" class="tab-view hidden"><h2>WAYPOINTS</h2><p>Content...</p></div>
             
             <div id="view-weather" class="tab-view hidden">
                 <div class="weather-carousel" id="wx-carousel" onscroll="aggiornaPallini()">
@@ -276,11 +311,11 @@
                 </div>
             </div>
 
-            <div id="view-notam" class="tab-view hidden"><h2>NOTAMS</h2><p>Contenuto...</p></div>
-            <div id="view-air" class="tab-view hidden"><h2>AIRCRAFT</h2><p>Contenuto...</p></div>
+            <div id="view-notam" class="tab-view hidden"><h2>NOTAMS</h2><p>Content...</p></div>
+            <div id="view-air" class="tab-view hidden"><h2>AIRCRAFT</h2><p>Content...</p></div>
             
             <div id="view-ofp" class="tab-view hidden">
-                <div id="ofp-text-container">Caricamento OFP...</div>
+                <div id="ofp-text-container">Loading OFP...</div>
             </div>
         </div>
 
@@ -288,7 +323,7 @@
             <button class="nav-btn active" onclick="cambiaTab('view-log', this, 'FLIGHT LOG')">
                 <svg class="nav-icon" viewBox="0 0 24 24">
                     <path d="M4 12h10M11 8l4 4-4 4" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M17 7h3v10h-3" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round"/>
+                    <path d="M19 7v10h2" stroke="#005EB8" stroke-width="2" fill="none" stroke-linecap="round"/>
                 </svg>
                 <span class="nav-text">Flight Log</span>
             </button>
@@ -332,26 +367,59 @@
     <script>
         var datiVoloGlobali = null;
 
+        // Auto Date (English Format for Consistency)
         window.onload = function() {
             let d = new Date();
-            let day = String(d.getDate()).padStart(2, '0');
-            let month = String(d.getMonth() + 1).padStart(2, '0'); 
-            let year = d.getFullYear();
-            let today = `${day}/${month}/${year}`;
-            document.getElementById('home-date-header').innerText = today;
+            // Using en-GB to get dd/mm/yyyy
+            document.getElementById('home-date-header').innerText = d.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         };
 
-        function apriModal() { document.getElementById('import-modal').style.display = 'flex'; document.getElementById('json-input').value = ""; document.getElementById('json-input').focus(); }
+        function apriModal() { document.getElementById('import-modal').style.display = 'flex'; document.getElementById('json-input').value = ""; }
         function chiudiModal() { document.getElementById('import-modal').style.display = 'none'; }
 
-        function elaboraDati() {
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedUser = localStorage.getItem('sb_username');
+            if(savedUser) document.getElementById('sb-username').value = savedUser;
+        });
+
+        async function scaricaDaSimBrief() {
+            let username = document.getElementById('sb-username').value.trim();
+            let statusDiv = document.getElementById('fetch-status');
+            
+            if(!username) { alert("Please enter Pilot ID."); return; }
+
+            localStorage.setItem('sb_username', username);
+            statusDiv.innerText = "Connecting to SimBrief...";
+            statusDiv.style.color = "#005EB8";
+
+            let url = `https://www.simbrief.com/api/xml.fetcher.php?userid=${username}&json=1`;
+
+            try {
+                let response = await fetch(url);
+                if (!response.ok) throw new Error("Connection error");
+                let data = await response.json();
+                if (!data || !data.general) throw new Error("Invalid data.");
+
+                popolaApp(data);
+                statusDiv.innerText = "Flight loaded successfully!";
+                statusDiv.style.color = "green";
+                setTimeout(chiudiModal, 500);
+
+            } catch (e) {
+                statusDiv.innerText = "Error: " + e.message;
+                statusDiv.style.color = "red";
+                alert("Import Error: " + e.message + "\n\nNote: If local, use 'Paste JSON' or upload online.");
+            }
+        }
+
+        function elaboraDatiManuali() {
             var testo = document.getElementById('json-input').value.trim();
             if(!testo) return;
             var inizio = testo.indexOf('{');
             var fine = testo.lastIndexOf('}');
-            if (inizio === -1 || fine === -1) { alert("Non trovo dati validi."); return; }
+            if (inizio === -1 || fine === -1) { alert("No valid JSON found."); return; }
             var testoPulito = testo.substring(inizio, fine + 1);
-            try { var data = JSON.parse(testoPulito); popolaApp(data); chiudiModal(); } catch (e) { alert("Errore lettura dati: " + e.message); }
+            try { var data = JSON.parse(testoPulito); popolaApp(data); chiudiModal(); } catch (e) { alert("Error parsing data: " + e.message); }
         }
 
         function formatName(str) {
@@ -407,8 +475,8 @@
             crewHtml += '</tbody></table>';
             document.getElementById('crew-content').innerHTML = crewHtml;
 
-            // CARICA OFP TESTO
-            let ofpText = data.text.plan_html || (data.text.plan_text ? `<pre>${data.text.plan_text}</pre>` : "OFP non disponibile.");
+            // LOAD OFP TEXT
+            let ofpText = data.text.plan_html || (data.text.plan_text ? `<pre>${data.text.plan_text}</pre>` : "OFP not available.");
             document.getElementById('ofp-text-container').innerHTML = ofpText;
 
             aggiornaMeteo(data);
@@ -600,7 +668,7 @@
                     let page = document.getElementById(pageId);
                     if(page && filename) {
                         let fullUrl = finalBaseUrl + filename;
-                        let htmlContent = `<div style="display:flex; flex-direction:column; align-items:center; height:100%; width:100%;"><div style="flex-grow:1; width:100%; display:flex; justify-content:center; align-items:center; overflow:hidden;"><img src="${fullUrl}" class="wx-map-img" alt="Mappa" referrerpolicy="no-referrer"></div><div style="padding:10px; flex-shrink:0;"><a href="${fullUrl}" target="_blank" class="btn-open-map">APRI MAPPA ESTERNA</a></div></div>`;
+                        let htmlContent = `<div style="display:flex; flex-direction:column; align-items:center; height:100%; width:100%;"><div style="flex-grow:1; width:100%; display:flex; justify-content:center; align-items:center; overflow:hidden;"><img src="${fullUrl}" class="wx-map-img" alt="Mappa" referrerpolicy="no-referrer"></div><div style="padding:10px; flex-shrink:0;"><a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a></div></div>`;
                         page.innerHTML = htmlContent;
                     }
                 };
@@ -621,60 +689,6 @@
             var el = document.getElementById(id);
             var chevron = btn.querySelector('.chevron');
             if (el.style.display === "block") { el.style.display = "none"; chevron.classList.remove('up'); } else { el.style.display = "block"; chevron.classList.add('up'); }
-        }
-        // Al caricamento, controlla se c'è un username salvato
-        window.addEventListener('DOMContentLoaded', () => {
-            let savedUser = localStorage.getItem('sb_username');
-            if(savedUser) document.getElementById('sb-username').value = savedUser;
-        });
-
-        async function scaricaDaSimBrief() {
-            let username = document.getElementById('sb-username').value.trim();
-            let statusDiv = document.getElementById('fetch-status');
-            
-            if(!username) { 
-                alert("Inserisci il tuo Pilot ID o Username di SimBrief."); 
-                return; 
-            }
-
-            // Salva username per la prossima volta
-            localStorage.setItem('sb_username', username);
-            statusDiv.innerText = "Connessione a SimBrief in corso...";
-            statusDiv.style.color = "#005EB8";
-
-            // URL API SimBrief
-            let url = `https://www.simbrief.com/api/xml.fetcher.php?userid=${username}&json=1`;
-
-            try {
-                let response = await fetch(url);
-                if (!response.ok) throw new Error("Errore di connessione");
-                
-                let data = await response.json();
-                
-                if (!data || !data.general) throw new Error("Dati volo non validi o OFP non generato.");
-
-                popolaApp(data);
-                statusDiv.innerText = "Volo caricato con successo!";
-                statusDiv.style.color = "green";
-                
-                setTimeout(chiudiModal, 500); // Chiude dopo mezzo secondo
-
-            } catch (e) {
-                statusDiv.innerText = "Errore: " + e.message;
-                statusDiv.style.color = "red";
-                alert("Errore importazione: " + e.message + "\n\nNota: Se sei in locale (file sul pc), questo potrebbe non funzionare per sicurezza del browser. Metti il file online.");
-            }
-        }
-
-        // Rinomina la vecchia funzione 'elaboraDati' in 'elaboraDatiManuali'
-        function elaboraDatiManuali() {
-            var testo = document.getElementById('json-input').value.trim();
-            if(!testo) return;
-            var inizio = testo.indexOf('{');
-            var fine = testo.lastIndexOf('}');
-            if (inizio === -1 || fine === -1) { alert("Non trovo dati validi."); return; }
-            var testoPulito = testo.substring(inizio, fine + 1);
-            try { var data = JSON.parse(testoPulito); popolaApp(data); chiudiModal(); } catch (e) { alert("Errore lettura dati: " + e.message); }
         }
     </script>
 </body>
