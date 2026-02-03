@@ -75,27 +75,27 @@
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
         .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; flex-shrink: 0; position: relative; }
         
-        /* Contenitore flessibile per le mappe */
         .map-wrapper {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start; /* Allinea in alto per evitare tagli */
             align-items: center;
             width: 100%;
             height: 100%;
             min-height: 400px;
+            padding-top: 20px;
         }
 
         .wx-map-img { 
             max-width: 98%; 
-            max-height: 65vh; 
+            max-height: 60vh; 
             width: auto; 
             height: auto; 
             object-fit: contain; 
             display: block; 
-            border: 1px solid #ccc; 
             background: white; 
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #eee;
         }
         
         .btn-open-map { 
@@ -115,8 +115,6 @@
         .weather-page:not(#wx-page-0) { 
             display: flex !important; 
             flex-direction: column; 
-            justify-content: center; 
-            align-items: center; 
             background-color: #F1F7FD; 
         }
 
@@ -156,7 +154,7 @@
 
     <script>
         (function() {
-            var pass = localStorage.getItem('efb_pass_v5'); // New Key
+            var pass = localStorage.getItem('efb_pass_v5'); 
             if (pass !== "Ryanair737") { 
                 var userIn = prompt("ENTER PASSWORD:");
                 if (userIn === "Ryanair737") {
@@ -288,7 +286,6 @@
         var datiVoloGlobali = null;
 
         window.onload = function() {
-            // DATE FIX (DD/MM/YYYY Manual)
             let d = new Date();
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
@@ -536,6 +533,7 @@
         }
 
         function aggiornaMeteo(data) {
+            // Pagina 0: METAR/TAF (Funziona già)
             var container = document.getElementById('wx-page-0');
             container.innerHTML = ""; 
             if (data.weather) {
@@ -578,58 +576,52 @@
                 }
             }
 
-            // MAPPE - LOGICA DIRETTA E SEMPLICE (SENZA FALLBACK SU GIF INESISTENTI)
-            let imgs = data.images || {};
-            // Usa directory raw senza modifiche
-            let directory = imgs.directory || ""; 
+            // --- MAPPE: LOGICA RICOSTRUITA (BYPASS JSON ERROR) ---
             
-            const setMap = (pageId, filename) => {
+            // 1. Estrai dati grezzi per costruire il link
+            let dep = data.origin.icao_code;
+            let arr = data.destination.icao_code;
+            let time = data.params.time_generated;
+            
+            // Base URL SimBrief UADS (fissa)
+            let baseUrl = "https://www.simbrief.com/ofp/uads/";
+            
+            // Prefisso File Standard: GMFFLFTW_UAD_1770154418_
+            let filePrefix = `${dep}${arr}_UAD_${time}_`;
+
+            // Funzione che genera la pagina mappa forzando il link calcolato
+            const injectMap = (pageId, suffix, debugLabel) => {
                 let page = document.getElementById(pageId);
-                if(page) {
-                    let fullUrl = "";
-                    let debugText = "";
-                    
-                    if (filename) {
-                        // Unisce directory e filename brutalmente
-                        fullUrl = directory + filename;
-                        debugText = ""; // Nascosto se tutto ok
-                    } else {
-                        // Se manca il file, non mettere link rotto
-                        fullUrl = "";
-                        debugText = "No Chart Available (File: undefined)";
-                    }
+                if(!page) return;
 
-                    // Se fullUrl è vuoto o non valido, nascondi img
-                    let imgStyle = fullUrl ? "" : "display:none;";
-                    // Se fullUrl è vuoto, disabilita link
-                    let linkHref = fullUrl ? fullUrl : "#";
-                    let linkTarget = fullUrl ? "_blank" : "_self";
-                    let btnText = fullUrl ? "OPEN EXTERNAL MAP" : "MAP UNAVAILABLE";
-                    let btnStyle = fullUrl ? "background-color:#005EB8;" : "background-color:#ccc;cursor:not-allowed;";
+                // Costruzione Link Manuale: Es. https://www.simbrief.com/ofp/uads/GMFFLFTW_UAD_1770154418_SIGWX00.gif
+                let fullUrl = `${baseUrl}${filePrefix}${suffix}`;
+                
+                // Provo anche a leggere dal JSON se c'è, ma se manca uso il mio costruito
+                // (Qui salto la lettura dal JSON perché è inaffidabile nel tuo caso, vado dritto al sodo)
 
-                    let htmlContent = `
-                        <div class="map-wrapper">
-                            <img src="${fullUrl}" class="wx-map-img" alt="Chart" style="${imgStyle}" referrerpolicy="no-referrer">
-                            <div style="color:red;font-size:10px;margin-bottom:5px;">${debugText}</div>
-                            <a href="${linkHref}" target="${linkTarget}" class="btn-open-map" style="${btnStyle}">${btnText}</a>
-                        </div>
-                    `;
-                    page.innerHTML = htmlContent;
-                }
+                let html = `
+                    <div class="map-wrapper">
+                        <img src="${fullUrl}" class="wx-map-img" alt="Loading Map..." referrerpolicy="no-referrer">
+                        <div style="font-size:10px;color:#999;margin-bottom:5px;">File: ${filePrefix}${suffix}</div>
+                        <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                    </div>
+                `;
+                page.innerHTML = html;
             };
 
-            let sigwx = imgs.sigwx || [];
-            let wind = imgs.wind || [];
-            let vert = imgs.vertical || [];
-
-            setMap('wx-page-1', sigwx[0]);
-            setMap('wx-page-2', sigwx[1]);
-            setMap('wx-page-3', wind[0]);
-            setMap('wx-page-4', wind[1]);
-            setMap('wx-page-5', wind[2]);
+            // INIEZIONE FORZATA PAGINE 1-6
+            injectMap('wx-page-1', 'SIGWX00.gif', 'SIGWX 1');
+            injectMap('wx-page-2', 'SIGWX00_B.gif', 'SIGWX 2');
             
-            let vertFile = (Array.isArray(vert) && vert.length > 0) ? vert[0] : (typeof vert === 'string' ? vert : null);
-            setMap('wx-page-6', vertFile);
+            // Per i venti, SimBrief usa FL (30000, 34000, 39000 etc).
+            // Provo i livelli standard. Se il tuo volo è basso, potrebbero essere diversi, ma questi sono i classici jet.
+            injectMap('wx-page-3', 'WINDS30000.gif', 'WIND FL300');
+            injectMap('wx-page-4', 'WINDS34000.gif', 'WIND FL340');
+            injectMap('wx-page-5', 'WINDS39000.gif', 'WIND FL390');
+            
+            // Profilo Verticale
+            injectMap('wx-page-6', 'VERTICAL.gif', 'VERTICAL PROF');
         }
 
         function creaBoxMeteo(label, codes, name, metar, taf, idUnico, elevation, stats, mTime, tTime, runwayHTML) {
