@@ -14,7 +14,7 @@
         }
         .hidden { display: none !important; }
 
-        /* --- HOME STYLES --- */
+        /* HOME */
         #page-home { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         
         #home-date-header {
@@ -26,29 +26,11 @@
         }
 
         .section-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-        
-        .section-title { 
-            font-weight: 700; 
-            font-size: 14px; 
-            margin-bottom: 15px; 
-            color: #005EB8; 
-            border-bottom: 1px solid #f0f0f0; 
-            padding-bottom: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
+        .section-title { font-weight: 700; font-size: 14px; margin-bottom: 15px; color: #005EB8; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
-        .btn-main-import {
-            background-color: #2687E5; 
-            color: white; border: none; 
-            padding: 4px 10px; 
-            border-radius: 15px; 
-            font-size: 10px; 
-            font-weight: bold; cursor: pointer; 
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .btn-main-import { background-color: #2687E5; color: white; border: none; padding: 4px 10px; border-radius: 15px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
 
+        /* TABLES */
         #flight-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
         #flight-table th { text-align: left; padding: 10px; border-bottom: 2px solid #e5e5ea; color: #005EB8; font-weight: normal; font-size: 11px; text-transform: uppercase; }
         #flight-table td { padding: 12px 10px; border-bottom: 1px solid #f2f2f7; color: #005EB8; font-weight: 600; }
@@ -61,22 +43,11 @@
         .crew-name { font-weight: 600; color: #005EB8; font-style: normal !important; }
 
         /* MODAL */
-        #import-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 9999;
-            justify-content: center; align-items: center;
-        }
-        .modal-box {
-            background: white; width: 90%; max-width: 500px; padding: 25px; border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column; gap: 15px;
-        }
+        #import-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center; }
+        .modal-box { background: white; width: 90%; max-width: 500px; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); display: flex; flex-direction: column; gap: 15px; }
         .modal-title { font-weight: bold; font-size: 18px; }
         .modal-desc { font-size: 13px; color: #666; line-height: 1.4; }
-        textarea#json-input {
-            width: 100%; height: 150px; padding: 10px; border: 1px solid #d1d1d6; border-radius: 8px;
-            font-family: monospace; font-size: 11px; resize: vertical; box-sizing: border-box;
-        }
+        textarea#json-input { width: 100%; height: 150px; padding: 10px; border: 1px solid #d1d1d6; border-radius: 8px; font-family: monospace; font-size: 11px; resize: vertical; box-sizing: border-box; }
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
         .btn-cancel { background: #e5e5ea; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-confirm { background: #34c759; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
@@ -89,7 +60,6 @@
         .page-title-center { position: absolute; left: 50%; transform: translateX(-50%); color: #000000; font-size: 17px; font-weight: 600; text-transform: uppercase; white-space: nowrap; z-index: 1; }
         .flight-header-row { text-align: center; color: #005EB8; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 5px; letter-spacing: 0.5px; font-weight: 500; }
         #content-area { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
-        
         #ofp-text-container { background: white; padding: 15px; border-radius: 5px; font-family: "Courier New", Courier, monospace; font-size: 11px; white-space: pre-wrap; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
         /* BOTTOM NAV */
@@ -100,11 +70,12 @@
         .nav-btn:nth-of-type(2) .nav-text { color: #005EB8 !important; }
         .nav-btn.active { border-top: 4px solid #005EB8; background-color: rgba(0,0,0,0.03); }
 
-        /* WEATHER MAPS CSS */
+        /* WEATHER MAPS */
         #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
         .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; flex-shrink: 0; position: relative; }
         
+        /* Contenitore flessibile per le mappe */
         .map-wrapper {
             display: flex;
             flex-direction: column;
@@ -112,35 +83,35 @@
             align-items: center;
             width: 100%;
             height: 100%;
-            min-height: 300px;
+            min-height: 400px;
         }
 
         .wx-map-img { 
             max-width: 98%; 
-            max-height: 70vh; 
+            max-height: 65vh; 
             width: auto; 
             height: auto; 
             object-fit: contain; 
             display: block; 
-            margin-bottom: 15px;
-            border: 1px solid #ddd; 
+            border: 1px solid #ccc; 
             background: white; 
+            margin-bottom: 10px;
         }
         
         .btn-open-map { 
             background-color: #005EB8; 
             color: white; 
-            padding: 10px 20px; 
+            padding: 12px 24px; 
             border-radius: 8px; 
             text-decoration: none; 
             font-weight: bold; 
-            font-size: 12px; 
+            font-size: 13px; 
             text-transform: uppercase; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
             display: block; 
+            text-align: center;
         }
         
-        /* Flex per centrare il contenuto nelle pagine mappe */
         .weather-page:not(#wx-page-0) { 
             display: flex !important; 
             flex-direction: column; 
@@ -185,11 +156,11 @@
 
     <script>
         (function() {
-            var pass = localStorage.getItem('efb_pass_v4'); // Key cambiata per reset
+            var pass = localStorage.getItem('efb_pass_v5'); // New Key
             if (pass !== "Ryanair737") { 
                 var userIn = prompt("ENTER PASSWORD:");
                 if (userIn === "Ryanair737") {
-                    localStorage.setItem('efb_pass_v4', userIn);
+                    localStorage.setItem('efb_pass_v5', userIn);
                 } else {
                     document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
                     throw new Error("Access Denied");
@@ -607,52 +578,57 @@
                 }
             }
 
-            // MAPPE (FIX LOGICA)
-            let dir = data.images && data.images.directory ? data.images.directory : "ofp/images/";
-            dir = dir.replace("https://www.simbrief.com", "").replace("http://www.simbrief.com", "");
-            if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
-            if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
-            let finalBaseUrl = "https://www.simbrief.com" + dir;
-
+            // MAPPE - LOGICA DIRETTA E SEMPLICE (SENZA FALLBACK SU GIF INESISTENTI)
+            let imgs = data.images || {};
+            // Usa directory raw senza modifiche
+            let directory = imgs.directory || ""; 
+            
             const setMap = (pageId, filename) => {
                 let page = document.getElementById(pageId);
-                // INIETTA SEMPRE L'HTML, NON IMPORTA SE FILENAME ESISTE O MENO
                 if(page) {
-                    let file = filename || "map_not_found.gif"; 
-                    let fullUrl = finalBaseUrl + file;
+                    let fullUrl = "";
+                    let debugText = "";
                     
+                    if (filename) {
+                        // Unisce directory e filename brutalmente
+                        fullUrl = directory + filename;
+                        debugText = ""; // Nascosto se tutto ok
+                    } else {
+                        // Se manca il file, non mettere link rotto
+                        fullUrl = "";
+                        debugText = "No Chart Available (File: undefined)";
+                    }
+
+                    // Se fullUrl è vuoto o non valido, nascondi img
+                    let imgStyle = fullUrl ? "" : "display:none;";
+                    // Se fullUrl è vuoto, disabilita link
+                    let linkHref = fullUrl ? fullUrl : "#";
+                    let linkTarget = fullUrl ? "_blank" : "_self";
+                    let btnText = fullUrl ? "OPEN EXTERNAL MAP" : "MAP UNAVAILABLE";
+                    let btnStyle = fullUrl ? "background-color:#005EB8;" : "background-color:#ccc;cursor:not-allowed;";
+
                     let htmlContent = `
                         <div class="map-wrapper">
-                            <img src="${fullUrl}" 
-                                 class="wx-map-img" 
-                                 alt="Map Unavailable" 
-                                 referrerpolicy="no-referrer"
-                                 onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '<p style=\\'color:#666;font-size:12px;margin-bottom:10px;\\'>MAP NOT AVAILABLE PREVIEW</p>')">
-                            <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                            <img src="${fullUrl}" class="wx-map-img" alt="Chart" style="${imgStyle}" referrerpolicy="no-referrer">
+                            <div style="color:red;font-size:10px;margin-bottom:5px;">${debugText}</div>
+                            <a href="${linkHref}" target="${linkTarget}" class="btn-open-map" style="${btnStyle}">${btnText}</a>
                         </div>
                     `;
                     page.innerHTML = htmlContent;
                 }
             };
 
-            // ESTRAZIONE DATI SICURA
-            let imgs = data.images || {};
             let sigwx = imgs.sigwx || [];
             let wind = imgs.wind || [];
-            let vert = imgs.vertical || []; 
+            let vert = imgs.vertical || [];
 
-            // RIEMPI SEMPRE LE PAGINE 1-6
-            setMap('wx-page-1', sigwx[0] || "");
-            setMap('wx-page-2', sigwx[1] || "");
-
-            setMap('wx-page-3', wind[0] || "");
-            setMap('wx-page-4', wind[1] || "");
-            setMap('wx-page-5', wind[2] || "");
-
-            let vertFile = "";
-            if (Array.isArray(vert) && vert.length > 0) vertFile = vert[0];
-            else if (typeof vert === 'string') vertFile = vert;
+            setMap('wx-page-1', sigwx[0]);
+            setMap('wx-page-2', sigwx[1]);
+            setMap('wx-page-3', wind[0]);
+            setMap('wx-page-4', wind[1]);
+            setMap('wx-page-5', wind[2]);
             
+            let vertFile = (Array.isArray(vert) && vert.length > 0) ? vert[0] : (typeof vert === 'string' ? vert : null);
             setMap('wx-page-6', vertFile);
         }
 
