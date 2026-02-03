@@ -17,7 +17,6 @@
         /* --- HOME STYLES --- */
         #page-home { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; gap: 20px; max-width: 800px; margin: 0 auto; width: 100%; box-sizing: border-box; }
         
-        /* HEADER DATA */
         #home-date-header {
             color: #005EB8; 
             font-size: 28px; 
@@ -28,7 +27,6 @@
 
         .section-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         
-        /* SECTION TITLES */
         .section-title { 
             font-weight: 700; 
             font-size: 14px; 
@@ -41,7 +39,6 @@
             align-items: center; 
         }
 
-        /* REFRESH BUTTON */
         .btn-main-import {
             background-color: #2687E5; 
             color: white; border: none; 
@@ -51,33 +48,14 @@
             font-weight: bold; cursor: pointer; 
             text-transform: uppercase; letter-spacing: 0.5px;
         }
-        .btn-main-import:hover { background-color: #0056b3; }
 
-        /* FLIGHT TABLE */
         #flight-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
-        
-        #flight-table th { 
-            text-align: left; 
-            padding: 10px; 
-            border-bottom: 2px solid #e5e5ea; 
-            color: #005EB8; 
-            font-weight: normal; 
-            font-size: 11px; 
-            text-transform: uppercase; 
-        }
-        
-        #flight-table td { 
-            padding: 12px 10px; 
-            border-bottom: 1px solid #f2f2f7; 
-            color: #005EB8; 
-            font-weight: 600; 
-        }
+        #flight-table th { text-align: left; padding: 10px; border-bottom: 2px solid #e5e5ea; color: #005EB8; font-weight: normal; font-size: 11px; text-transform: uppercase; }
+        #flight-table td { padding: 12px 10px; border-bottom: 1px solid #f2f2f7; color: #005EB8; font-weight: 600; }
         #flight-table tr:hover { background-color: #f2f2f7; cursor: pointer; }
 
-        /* CREW TABLE */
         .crew-table { width: 100%; border-collapse: collapse; font-size: 13px; color: #005EB8; }
         .crew-table td { padding: 8px 0; border-bottom: 1px solid #f9f9f9; vertical-align: middle; }
-        
         .crew-role { color: #005EB8; font-weight: normal; width: 40px; font-size: 11px; opacity: 0.8; font-style: normal !important; } 
         .crew-code { font-weight: 600; color: #005EB8; width: 80px; font-style: normal !important; } 
         .crew-name { font-weight: 600; color: #005EB8; font-style: normal !important; }
@@ -103,108 +81,38 @@
         .btn-cancel { background: #e5e5ea; color: #333; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .btn-confirm { background: #34c759; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
 
-        /* --- PAGE DETAILS (HEADER) --- */
+        /* DETAILS HEADER */
         #page-details { display: flex; flex-direction: column; height: 100vh; background: #F1F7FD; }
-        
         #details-top-bar { padding: 10px 15px; background: #F1F7FD; display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
-        
         .nav-row { display: flex; justify-content: space-between; align-items: center; position: relative; height: 30px; }
-        
         .btn-back-custom { background: none; border: none; padding: 0; color: #2687E5; font-size: 14px; font-weight: normal; cursor: pointer; font-family: inherit; }
-        .btn-back-custom:hover { text-decoration: underline; }
-        
-        .page-title-center { 
-            position: absolute; left: 50%; transform: translateX(-50%); 
-            color: #000000; font-size: 17px; font-weight: 600; text-transform: uppercase; 
-            white-space: nowrap; z-index: 1;
-        }
-        
-        .flight-header-row { 
-            text-align: center; color: #005EB8; font-size: 13px; 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
-            padding-top: 5px; letter-spacing: 0.5px; font-weight: 500; 
-        }
-
+        .page-title-center { position: absolute; left: 50%; transform: translateX(-50%); color: #000000; font-size: 17px; font-weight: 600; text-transform: uppercase; white-space: nowrap; z-index: 1; }
+        .flight-header-row { text-align: center; color: #005EB8; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 5px; letter-spacing: 0.5px; font-weight: 500; }
         #content-area { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
         
-        /* OFP TEXT STYLE */
-        #ofp-text-container {
-            background: white; padding: 15px; border-radius: 5px; 
-            font-family: "Courier New", Courier, monospace; 
-            font-size: 11px; white-space: pre-wrap; color: #333;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+        #ofp-text-container { background: white; padding: 15px; border-radius: 5px; font-family: "Courier New", Courier, monospace; font-size: 11px; white-space: pre-wrap; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
-        /* --- BOTTOM NAV --- */
-        #bottom-nav { 
-            display: grid;
-            grid-template-columns: repeat(8, 1fr); 
-            background: #F1F7FD; 
-            border-top: 1px solid #ccc; 
-            padding: 0;
-            height: 60px; 
-            z-index: 100;
-            flex-shrink: 0; 
-        } 
-        
-        .nav-btn { 
-            background: transparent; border: none; display: flex; flex-direction: row; 
-            align-items: center; justify-content: center; gap: 4px; padding: 0 2px;
-            cursor: pointer; position: relative; border-top: 4px solid transparent; 
-            transition: all 0.1s;
-        }
-        
+        /* BOTTOM NAV */
+        #bottom-nav { display: grid; grid-template-columns: repeat(8, 1fr); background: #F1F7FD; border-top: 1px solid #ccc; padding: 0; height: 60px; z-index: 100; flex-shrink: 0; } 
+        .nav-btn { background: transparent; border: none; display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 4px; padding: 0 2px; cursor: pointer; position: relative; border-top: 4px solid transparent; transition: all 0.1s; }
         .nav-icon { width: 20px; height: 20px; fill: #005EB8; flex-shrink: 0; }
-
-        .nav-text {
-            font-size: 11px; font-weight: 400; text-transform: uppercase;
-            color: #D32F2F; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            letter-spacing: 0.3px;
-        }
-
+        .nav-text { font-size: 11px; font-weight: 400; text-transform: uppercase; color: #D32F2F; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; letter-spacing: 0.3px; }
         .nav-btn:nth-of-type(2) .nav-text { color: #005EB8 !important; }
-
         .nav-btn.active { border-top: 4px solid #005EB8; background-color: rgba(0,0,0,0.03); }
 
-        /* --- WEATHER STYLES --- */
+        /* WEATHER */
         #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
-        .weather-carousel::-webkit-scrollbar { display: none; }
         .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; }
         
-        /* STILE MAPPE */
-        .wx-map-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; }
-        
-        .btn-open-map { 
-            background-color: #005EB8; 
-            color: white; 
-            padding: 10px 20px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            font-size: 12px; 
-            display: inline-block; 
-            margin-top: 15px; 
-            text-transform: uppercase; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-        }
-        
-        .weather-page:not(#wx-page-0) { 
-            display: flex; 
-            flex-direction: column; /* Per impilare immagine e bottone */
-            justify-content: center; 
-            align-items: center; 
-            height: 100%; 
-            min-height: 300px; 
-            padding: 0; 
-            background-color: #F1F7FD; 
-        }
-
+        .wx-map-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; margin: 0 auto; border: 1px solid #ddd; background: white; }
+        .btn-open-map { background-color: #005EB8; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; margin-top: 15px; text-transform: uppercase; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .weather-page:not(#wx-page-0) { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; min-height: 300px; padding: 0; background-color: #F1F7FD; }
         .weather-dots { display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); flex-shrink: 0; }
         .dot { font-size: 18px; color: #ccc; cursor: pointer; transition: color 0.3s; line-height: 1; }
         .dot.active { color: #1c1c1e; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
 
-        /* WX BOXES */
+        /* WX COMPONENTS */
         .wx-airport-box { background: #FFFFFF; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 15px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
         .wx-header-row { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
         .wx-info-left { display: flex; flex-direction: column; gap: 2px; }
@@ -280,7 +188,7 @@
 
             <div class="modal-desc" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
                 <strong>Manual Import (Backup):</strong><br>
-                1. <a href="#" id="manual-link" target="_blank" style="color:#007aff;">Click here to open data</a> (Requires Pilot ID above)<br>
+                1. <a href="#" id="manual-link" target="_blank" style="color:#007aff;">Click here to open data</a> (Input ID above first)<br>
                 2. Select All & Copy<br>
                 3. Paste below:
             </div>
@@ -310,10 +218,22 @@
             
             <div id="view-weather" class="tab-view hidden">
                 <div class="weather-carousel" id="wx-carousel" onscroll="aggiornaPallini()">
-                    <div class="weather-page" id="wx-page-0"></div><div class="weather-page" id="wx-page-1"></div><div class="weather-page" id="wx-page-2"></div><div class="weather-page" id="wx-page-3"></div><div class="weather-page" id="wx-page-4"></div><div class="weather-page" id="wx-page-5"></div><div class="weather-page" id="wx-page-6"></div>
+                    <div class="weather-page" id="wx-page-0"></div>
+                    <div class="weather-page" id="wx-page-1"></div>
+                    <div class="weather-page" id="wx-page-2"></div>
+                    <div class="weather-page" id="wx-page-3"></div>
+                    <div class="weather-page" id="wx-page-4"></div>
+                    <div class="weather-page" id="wx-page-5"></div>
+                    <div class="weather-page" id="wx-page-6"></div>
                 </div>
                 <div class="weather-dots">
-                    <span class="dot active" onclick="vaiPaginaMeteo(0)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(1)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(2)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(3)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(4)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(5)">&#9670;</span><span class="dot" onclick="vaiPaginaMeteo(6)">&#9670;</span>
+                    <span class="dot active" onclick="vaiPaginaMeteo(0)">&#9670;</span>
+                    <span class="dot" onclick="vaiPaginaMeteo(1)">&#9670;</span>
+                    <span class="dot" onclick="vaiPaginaMeteo(2)">&#9670;</span>
+                    <span class="dot" onclick="vaiPaginaMeteo(3)">&#9670;</span>
+                    <span class="dot" onclick="vaiPaginaMeteo(4)">&#9670;</span>
+                    <span class="dot" onclick="vaiPaginaMeteo(5)">&#9670;</span>
+                    <span class="dot" onclick="vaiPaginaMeteo(6)">&#9670;</span>
                 </div>
             </div>
 
@@ -373,17 +293,14 @@
     <script>
         var datiVoloGlobali = null;
 
-        // AUTO DATE (DD/MM/YYYY) & RESTORE USER
         window.onload = function() {
             let d = new Date();
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
             let year = d.getFullYear();
             let today = `${day}/${month}/${year}`;
-            
             document.getElementById('home-date-header').innerText = today;
             
-            // Restore saved username
             let savedUser = localStorage.getItem('sb_username');
             if(savedUser) {
                 document.getElementById('sb-username').value = savedUser;
@@ -391,18 +308,14 @@
             }
         };
 
-        // Aggiorna il link manuale quando l'utente scrive l'ID
         document.getElementById('sb-username').addEventListener('input', function(e) {
             updateManualLink(e.target.value);
         });
 
         function updateManualLink(id) {
             let link = document.getElementById('manual-link');
-            if(id) {
-                link.href = `https://www.simbrief.com/api/xml.fetcher.php?userid=${id}&json=1`;
-            } else {
-                link.href = "#";
-            }
+            if(id) link.href = `https://www.simbrief.com/api/xml.fetcher.php?userid=${id}&json=1`;
+            else link.href = "#";
         }
 
         function apriModal() { document.getElementById('import-modal').style.display = 'flex'; }
@@ -501,7 +414,6 @@
             crewHtml += '</tbody></table>';
             document.getElementById('crew-content').innerHTML = crewHtml;
 
-            // LOAD OFP TEXT
             let ofpText = data.text.plan_html || (data.text.plan_text ? `<pre>${data.text.plan_text}</pre>` : "OFP not available.");
             document.getElementById('ofp-text-container').innerHTML = ofpText;
 
@@ -683,35 +595,21 @@
                 }
             }
 
-            // MAPPE (LINK CORRETTO E PULITO)
+            // MAPPE - LOGICA BLINDATA
             if (data.images) {
                 let dir = data.images.directory || "";
-                
-                // PULIZIA DEL PERCORSO: Rimuove dominio se c'è, assicura slash iniziali e finali corretti
                 dir = dir.replace("https://www.simbrief.com", "").replace("http://www.simbrief.com", "");
                 if (dir.length > 0 && !dir.startsWith("/")) dir = "/" + dir;
                 if (dir.length > 0 && !dir.endsWith("/")) dir = dir + "/";
-
                 let finalBaseUrl = "https://www.simbrief.com" + dir;
 
                 const setMap = (pageId, filename) => {
                     let page = document.getElementById(pageId);
                     if(page && filename) {
                         let fullUrl = finalBaseUrl + filename;
-                        
-                        // INIETTA HTML FORZATO: IMMAGINE + BOTTONE "OPEN EXTERNAL MAP" SEMPRE VISIBILE
                         let htmlContent = `
-                            <div style="display:flex; flex-direction:column; align-items:center; height:100%; width:100%;">
-                                <div style="flex-grow:1; width:100%; display:flex; justify-content:center; align-items:center; overflow:hidden;">
-                                    <img src="${fullUrl}" 
-                                         class="wx-map-img" 
-                                         alt="Map Loading..." 
-                                         referrerpolicy="no-referrer">
-                                </div>
-                                <div style="padding:10px; flex-shrink:0;">
-                                    <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
-                                </div>
-                            </div>
+                            <img src="${fullUrl}" class="wx-map-img" alt="Map Loading..." referrerpolicy="no-referrer">
+                            <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
                         `;
                         page.innerHTML = htmlContent;
                     }
@@ -719,11 +617,9 @@
 
                 if (data.images.sigwx && data.images.sigwx.length > 0) setMap('wx-page-1', data.images.sigwx[0]);
                 if (data.images.sigwx && data.images.sigwx.length > 1) setMap('wx-page-2', data.images.sigwx[1]);
-
                 if (data.images.wind && data.images.wind.length > 0) setMap('wx-page-3', data.images.wind[0]);
                 if (data.images.wind && data.images.wind.length > 1) setMap('wx-page-4', data.images.wind[1]);
                 if (data.images.wind && data.images.wind.length > 2) setMap('wx-page-5', data.images.wind[2]);
-
                 if (data.images.vertical) {
                     let vertImg = Array.isArray(data.images.vertical) ? data.images.vertical[0] : data.images.vertical;
                     setMap('wx-page-6', vertImg);
