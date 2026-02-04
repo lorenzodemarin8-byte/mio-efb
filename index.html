@@ -74,50 +74,10 @@
         #view-weather { display: flex; flex-direction: column; height: 100%; width: 100%; overflow: hidden; }
         .weather-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; flex-grow: 1; scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
         .weather-page { min-width: 100%; scroll-snap-align: start; overflow-y: auto; padding: 10px; box-sizing: border-box; background: transparent; flex-shrink: 0; position: relative; }
-        
-        .map-wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start; /* Allinea in alto per evitare tagli */
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            min-height: 400px;
-            padding-top: 20px;
-        }
-
-        .wx-map-img { 
-            max-width: 98%; 
-            max-height: 60vh; 
-            width: auto; 
-            height: auto; 
-            object-fit: contain; 
-            display: block; 
-            background: white; 
-            margin-bottom: 15px;
-            border: 1px solid #eee;
-        }
-        
-        .btn-open-map { 
-            background-color: #005EB8; 
-            color: white; 
-            padding: 12px 24px; 
-            border-radius: 8px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            font-size: 13px; 
-            text-transform: uppercase; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            display: block; 
-            text-align: center;
-        }
-        
-        .weather-page:not(#wx-page-0) { 
-            display: flex !important; 
-            flex-direction: column; 
-            background-color: #F1F7FD; 
-        }
-
+        .map-wrapper { display: flex; flex-direction: column; justify-content: flex-start; align-items: center; width: 100%; height: 100%; min-height: 400px; padding-top: 20px; }
+        .wx-map-img { max-width: 98%; max-height: 60vh; width: auto; height: auto; object-fit: contain; display: block; background: white; margin-bottom: 15px; border: 1px solid #eee; }
+        .btn-open-map { background-color: #005EB8; color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: block; text-align: center; }
+        .weather-page:not(#wx-page-0) { display: flex !important; flex-direction: column; background-color: #F1F7FD; }
         .weather-dots { display: flex; justify-content: center; gap: 10px; padding: 10px 0; background: transparent; border-top: 1px solid rgba(0,0,0,0.05); flex-shrink: 0; }
         .dot { font-size: 18px; color: #ccc; cursor: pointer; transition: color 0.3s; line-height: 1; }
         .dot.active { color: #1c1c1e; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
@@ -148,17 +108,33 @@
         .metar-header { background-color: #2687E5; color: white; font-size: 11px; font-weight: bold; padding: 6px 10px; display: flex; justify-content: space-between; text-transform: uppercase; }
         .header-time { font-weight: normal; color: white; opacity: 0.9; }
         .metar-body { background-color: #F1F7FD; color: #333; font-family: inherit; font-size: 12px; padding: 12px; white-space: pre-wrap; line-height: 1.5; }
+
+        /* FLIGHT LOG GRID STYLES */
+        .log-container { border: 1px solid rgba(0,0,0,0.1); border-radius: 6px; overflow: hidden; margin-bottom: 15px; background: white; }
+        .log-header { background-color: #2687E5; color: white; font-size: 11px; font-weight: bold; padding: 6px 10px; text-transform: uppercase; display: flex; justify-content: space-between; }
+        .log-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; font-size: 13px; }
+        .log-cell { padding: 10px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 35px;}
+        .log-cell:last-child { border-right: none; }
+        .log-label { font-weight: bold; color: #005EB8; text-align: left; background-color: #F9F9F9; }
+        .log-col-header { color: black; font-weight: normal; background-color: #F9F9F9; text-align: center;}
+        .log-value-sched { color: #333; font-weight: 600; font-size: 14px; }
+        .log-value-est { color: #666; font-style: italic; font-size: 13px; }
+        .log-input { border: 1px solid #ccc; border-radius: 4px; padding: 6px; width: 90%; text-align: center; font-family: inherit; font-size: 14px; color: #000; font-weight: bold; box-sizing: border-box; background: #fff; }
+        .log-calc-result { font-weight: bold; color: #005EB8; font-size: 14px; }
+        
+        /* FUEL INPUTS */
+        .fuel-input-lg { width: 100%; padding: 15px; font-size: 24px; text-align: center; border: 2px solid #2687E5; border-radius: 10px; color: #005EB8; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <script>
         (function() {
-            var pass = localStorage.getItem('efb_pass_v5'); 
+            var pass = localStorage.getItem('efb_pass_v9'); 
             if (pass !== "Ryanair737") { 
                 var userIn = prompt("ENTER PASSWORD:");
                 if (userIn === "Ryanair737") {
-                    localStorage.setItem('efb_pass_v5', userIn);
+                    localStorage.setItem('efb_pass_v9', userIn);
                 } else {
                     document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
                     throw new Error("Access Denied");
@@ -393,26 +369,19 @@
             `;
             tbody.innerHTML = riga;
             
-            // --- GESTIONE CREW (CON FORMATTAZIONE NOMI) ---
+            // CREW
             let crewHtml = '<table class="crew-table"><tbody>';
             const genCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
             let crew = data.crew || {};
             
-            // PILOTS
             if (crew.cpt) { crewHtml += `<tr><td class="crew-role">CP</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.cpt)}</td></tr>`; }
             if (crew.fo) { crewHtml += `<tr><td class="crew-role">FO</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.fo)}</td></tr>`; }
-            
-            // PURSER
             if (crew.pu) { crewHtml += `<tr><td class="crew-role">PU</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.pu)}</td></tr>`; }
-            
-            // FLIGHT ATTENDANTS (LIMITATI A 3 PER AVERE 4 CABIN CREW TOTALI)
             if (crew.fa && Array.isArray(crew.fa)) {
-                // .slice(0, 3) prende solo i primi 3 nomi dell'array, ignorando il quarto se presente
                 crew.fa.slice(0, 3).forEach(name => {
                     crewHtml += `<tr><td class="crew-role">FA</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(name)}</td></tr>`;
                 });
             }
-            
             crewHtml += '</tbody></table>';
             document.getElementById('crew-content').innerHTML = crewHtml;
 
@@ -429,7 +398,10 @@
             let headerHTML = `<b>${callsign}</b> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${data.aircraft.icaocode} &nbsp; Y${data.aircraft.max_passengers} &nbsp; OFP${release}`;
             document.getElementById('recap-header').innerHTML = headerHTML;
 
+            // IMPORTANTE: QUI SI POPOLANO LE ALTRE PAGINE
             aggiornaMeteo(data);
+            aggiornaFlightLog(data);
+            aggiornaFuelPage(data);
         }
 
         function apriVolo() {
@@ -586,30 +558,17 @@
                 }
             }
 
-            // --- MAPPE: LOGICA RICOSTRUITA (BYPASS JSON ERROR) ---
-            
-            // 1. Estrai dati grezzi per costruire il link
+            // MAPPE
             let dep = data.origin.icao_code;
             let arr = data.destination.icao_code;
             let time = data.params.time_generated;
-            
-            // Base URL SimBrief UADS (fissa)
             let baseUrl = "https://www.simbrief.com/ofp/uads/";
-            
-            // Prefisso File Standard: GMFFLFTW_UAD_1770154418_
             let filePrefix = `${dep}${arr}_UAD_${time}_`;
 
-            // Funzione che genera la pagina mappa forzando il link calcolato
             const injectMap = (pageId, suffix, debugLabel) => {
                 let page = document.getElementById(pageId);
                 if(!page) return;
-
-                // Costruzione Link Manuale: Es. https://www.simbrief.com/ofp/uads/GMFFLFTW_UAD_1770154418_SIGWX00.gif
                 let fullUrl = `${baseUrl}${filePrefix}${suffix}`;
-                
-                // Provo anche a leggere dal JSON se c'è, ma se manca uso il mio costruito
-                // (Qui salto la lettura dal JSON perché è inaffidabile nel tuo caso, vado dritto al sodo)
-
                 let html = `
                     <div class="map-wrapper">
                         <img src="${fullUrl}" class="wx-map-img" alt="Loading Map..." referrerpolicy="no-referrer">
@@ -620,17 +579,11 @@
                 page.innerHTML = html;
             };
 
-            // INIEZIONE FORZATA PAGINE 1-6
             injectMap('wx-page-1', 'SIGWX00.gif', 'SIGWX 1');
             injectMap('wx-page-2', 'SIGWX00_B.gif', 'SIGWX 2');
-            
-            // Per i venti, SimBrief usa FL (30000, 34000, 39000 etc).
-            // Provo i livelli standard. Se il tuo volo è basso, potrebbero essere diversi, ma questi sono i classici jet.
             injectMap('wx-page-3', 'WINDS30000.gif', 'WIND FL300');
             injectMap('wx-page-4', 'WINDS34000.gif', 'WIND FL340');
             injectMap('wx-page-5', 'WINDS39000.gif', 'WIND FL390');
-            
-            // Profilo Verticale - Modificato in PROFILE.gif
             injectMap('wx-page-6', 'PROFILE.gif', 'VERTICAL PROF');
         }
 
@@ -642,6 +595,183 @@
             var el = document.getElementById(id);
             var chevron = btn.querySelector('.chevron');
             if (el.style.display === "block") { el.style.display = "none"; chevron.classList.remove('up'); } else { el.style.display = "block"; chevron.classList.add('up'); }
+        }
+
+        // --- FUEL PAGE FUNCTION ---
+        function aggiornaFuelPage(data) {
+            let plannedBlock = data.fuel.plan_ramp || 0;
+            let html = `
+                <div class="section-box">
+                    <div class="section-title">FUEL INITIALIZATION</div>
+                    <div style="display:flex; flex-direction:column; gap:10px; align-items:center; padding:20px;">
+                        <label style="font-weight:bold; color:#333;">FINAL BLOCK FUEL (KGS)</label>
+                        <input type="number" id="input-final-block" class="fuel-input-lg" value="${plannedBlock}" onchange="calcolaCarburante()">
+                        <div style="font-size:11px; color:#666; margin-top:5px;">Default from SimBrief OFP</div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('view-fuel').innerHTML = html;
+        }
+
+        // --- FLIGHT LOG FUNCTION ---
+        function aggiornaFlightLog(data) {
+            const fmt = (ts) => ts ? new Date(ts * 1000).toISOString().substr(11, 5) : "--:--";
+            const fmtDur = (sec) => {
+                if(!sec) return "--:--";
+                let h = Math.floor(sec / 3600);
+                let m = Math.floor((sec % 3600) / 60);
+                return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+            };
+
+            let t = data.times;
+            let f = data.fuel; 
+            
+            let html = `
+                <div class="log-container">
+                    <div class="log-header">
+                        <span>FLIGHT TIMES (OOOI)</span>
+                    </div>
+                    
+                    <div class="log-grid">
+                        <div class="log-cell log-col-header"></div> 
+                        <div class="log-cell log-col-header">SCHED</div>
+                        <div class="log-cell log-col-header">EST</div>
+                        <div class="log-cell log-col-header">ACTUAL</div>
+
+                        <div class="log-cell log-label">OUT</div>
+                        <div class="log-cell log-value-sched">${fmt(t.sched_out)}</div>
+                        <div class="log-cell log-value-est">${fmt(t.est_out)}</div>
+                        <div class="log-cell"><input type="time" id="act-out" class="log-input" onchange="calcolaTempi()"></div>
+
+                        <div class="log-cell log-label">OFF</div>
+                        <div class="log-cell log-value-sched">${fmt(t.sched_off)}</div>
+                        <div class="log-cell log-value-est">${fmt(t.est_off)}</div>
+                        <div class="log-cell"><input type="time" id="act-off" class="log-input" onchange="calcolaTempi()"></div>
+
+                        <div class="log-cell log-label">ON</div>
+                        <div class="log-cell log-value-sched">${fmt(t.sched_on)}</div>
+                        <div class="log-cell log-value-est">${fmt(t.est_on)}</div>
+                        <div class="log-cell"><input type="time" id="act-on" class="log-input" onchange="calcolaTempi()"></div>
+
+                        <div class="log-cell log-label">IN</div>
+                        <div class="log-cell log-value-sched">${fmt(t.sched_in)}</div>
+                        <div class="log-cell log-value-est">${fmt(t.est_in)}</div>
+                        <div class="log-cell"><input type="time" id="act-in" class="log-input" onchange="calcolaTempi()"></div>
+
+                        <div class="log-cell log-label">BLOCK TIME</div>
+                        <div class="log-cell log-value-sched">${fmtDur(t.sched_block)}</div>
+                        <div class="log-cell log-value-est">${fmtDur(t.est_block)}</div>
+                        <div class="log-cell log-calc-result" id="val-block">--:--</div>
+
+                        <div class="log-cell log-label">FLIGHT TIME</div>
+                        <div class="log-cell log-value-sched">${fmtDur(t.sched_time_enroute)}</div>
+                        <div class="log-cell log-value-est">${fmtDur(t.est_time_enroute)}</div>
+                        <div class="log-cell log-calc-result" id="val-flight">--:--</div>
+                    </div>
+                </div>
+
+                <div class="log-container">
+                    <div class="log-header">
+                        <span>FUEL</span>
+                    </div>
+                    <div class="log-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr;">
+                        <div class="log-cell log-col-header"></div>
+                        <div class="log-cell log-col-header">PLANNED</div>
+                        <div class="log-cell log-col-header">ACTUAL</div>
+                        <div class="log-cell log-col-header">DIFF</div>
+
+                        <div class="log-cell log-label">BLOCK FUEL</div>
+                        <div class="log-cell log-value-sched">${f.plan_ramp}</div>
+                        <div class="log-cell" id="disp-block-fuel" style="font-weight:bold; color:#005EB8;">${f.plan_ramp}</div>
+                        <div class="log-cell">-</div>
+
+                        <div class="log-cell log-label">ARRIVAL FUEL</div>
+                        <div class="log-cell log-value-sched">${f.plan_landing}</div>
+                        <div class="log-cell"><input type="number" id="input-arr-fuel" class="log-input" placeholder="KGS" onchange="calcolaCarburante()"></div>
+                        <div class="log-cell log-calc-result" id="val-arr-diff">--</div>
+
+                        <div class="log-cell log-label">TRIP FUEL</div>
+                        <div class="log-cell log-value-sched">${f.enroute_burn}</div>
+                        <div class="log-cell log-calc-result" id="val-act-trip">--</div>
+                        <div class="log-cell log-calc-result" id="val-trip-diff">--</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('view-log').innerHTML = html;
+        }
+        // --- GLOBAL CALCULATION FUNCTIONS ---
+        
+        // 1. Time Calculation (OOOI)
+        window.calcolaTempi = function() {
+            const getMin = (id) => {
+                let val = document.getElementById(id).value;
+                if(!val) return null;
+                let p = val.split(':');
+                return parseInt(p[0]) * 60 + parseInt(p[1]);
+            };
+
+            const calcDiff = (start, end) => {
+                if(start === null || end === null) return "--:--";
+                let diff = end - start;
+                if(diff < 0) diff += 1440; 
+                let h = Math.floor(diff / 60);
+                let m = diff % 60;
+                return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+            };
+
+            let outT = getMin('act-out');
+            let offT = getMin('act-off');
+            let onT = getMin('act-on');
+            let inT = getMin('act-in');
+
+            document.getElementById('val-block').innerText = calcDiff(outT, inT);
+            document.getElementById('val-flight').innerText = calcDiff(offT, onT);
+        }
+
+        // 2. Fuel Calculation
+       window.calcolaCarburante = function() {
+            // 1. Recupera i dati Actual inseriti
+            let blockInput = document.getElementById('input-final-block');
+            let blockFuel = blockInput ? parseFloat(blockInput.value) : 0;
+
+            let arrInput = document.getElementById('input-arr-fuel');
+            let arrFuel = arrInput ? parseFloat(arrInput.value) : 0;
+
+            // Aggiorna la visualizzazione del Block Actual
+            let dispBlock = document.getElementById('disp-block-fuel');
+            if(dispBlock) dispBlock.innerText = blockFuel;
+
+            // 2. Recupera i dati Planned da SimBrief (Dati Globali)
+            let plannedTrip = 0;
+            let plannedArr = 0;
+            
+            if(datiVoloGlobali && datiVoloGlobali.fuel) {
+                plannedTrip = parseFloat(datiVoloGlobali.fuel.enroute_burn || 0);
+                plannedArr = parseFloat(datiVoloGlobali.fuel.plan_landing || 0);
+            }
+
+            // 3. Esegui i calcoli se i dati sono presenti
+            if(blockFuel > 0 && arrFuel > 0) {
+                
+                // CALCOLO TRIP ACTUAL
+                let actualTrip = blockFuel - arrFuel;
+                document.getElementById('val-act-trip').innerText = actualTrip;
+
+                // CALCOLO DIFF TRIP (Actual - Planned)
+                // Se positivo (bruciato di più) = Rosso. Se negativo (risparmiato) = Verde.
+                let diffTrip = actualTrip - plannedTrip;
+                let elTripDiff = document.getElementById('val-trip-diff');
+                elTripDiff.innerText = (diffTrip > 0 ? "+" : "") + diffTrip;
+                elTripDiff.style.color = diffTrip > 0 ? "red" : "green";
+
+                // CALCOLO DIFF ARRIVAL (Actual - Planned)
+                // Se positivo (più carburante all'arrivo) = Verde. Se negativo = Rosso.
+                let diffArr = arrFuel - plannedArr;
+                let elArrDiff = document.getElementById('val-arr-diff');
+                elArrDiff.innerText = (diffArr > 0 ? "+" : "") + diffArr;
+                elArrDiff.style.color = diffArr >= 0 ? "green" : "red";
+            }
         }
     </script>
 </body>
