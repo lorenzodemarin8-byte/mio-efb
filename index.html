@@ -393,17 +393,26 @@
             `;
             tbody.innerHTML = riga;
             
+            // --- GESTIONE CREW (CON FORMATTAZIONE NOMI) ---
             let crewHtml = '<table class="crew-table"><tbody>';
             const genCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
             let crew = data.crew || {};
+            
+            // PILOTS
             if (crew.cpt) { crewHtml += `<tr><td class="crew-role">CP</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.cpt)}</td></tr>`; }
             if (crew.fo) { crewHtml += `<tr><td class="crew-role">FO</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.fo)}</td></tr>`; }
+            
+            // PURSER
             if (crew.pu) { crewHtml += `<tr><td class="crew-role">PU</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(crew.pu)}</td></tr>`; }
+            
+            // FLIGHT ATTENDANTS (LIMITATI A 3 PER AVERE 4 CABIN CREW TOTALI)
             if (crew.fa && Array.isArray(crew.fa)) {
-                crew.fa.forEach(name => {
+                // .slice(0, 3) prende solo i primi 3 nomi dell'array, ignorando il quarto se presente
+                crew.fa.slice(0, 3).forEach(name => {
                     crewHtml += `<tr><td class="crew-role">FA</td><td class="crew-code">${genCode()}</td><td class="crew-name">${formatName(name)}</td></tr>`;
                 });
             }
+            
             crewHtml += '</tbody></table>';
             document.getElementById('crew-content').innerHTML = crewHtml;
 
