@@ -26,6 +26,20 @@
         }
 
         .section-box { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        
+        /* Box Full width */
+        .section-box-full { 
+            background: white; 
+            padding: 0; 
+            border-radius: 12px; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            overflow: hidden; 
+            margin-bottom: 40px; /* Spaziatura standard */
+        }
+        
+        /* Spaziatura Extra per Alternate Routes */
+        .margin-extra { margin-bottom: 80px !important; }
+
         .section-title { font-weight: 700; font-size: 14px; margin-bottom: 15px; color: #005EB8; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
 
         .btn-main-import { background-color: #2687E5; color: white; border: none; padding: 4px 10px; border-radius: 15px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -58,7 +72,20 @@
         .nav-row { display: flex; justify-content: space-between; align-items: center; position: relative; height: 30px; }
         .btn-back-custom { background: none; border: none; padding: 0; color: #2687E5; font-size: 14px; font-weight: normal; cursor: pointer; font-family: inherit; }
         .page-title-center { position: absolute; left: 50%; transform: translateX(-50%); color: #000000; font-size: 17px; font-weight: 600; text-transform: uppercase; white-space: nowrap; z-index: 1; }
-        .flight-header-row { text-align: center; color: #005EB8; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: 5px; letter-spacing: 0.5px; font-weight: 500; }
+        
+        .flight-header-row { 
+            text-align: center; 
+            color: #005EB8; 
+            font-size: 13px; 
+            white-space: nowrap; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            padding-top: 5px; 
+            letter-spacing: 0.5px; 
+            font-weight: 400; 
+        }
+        .header-callsign { font-weight: 700; }
+        
         #content-area { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; }
         #ofp-text-container { background: white; padding: 15px; border-radius: 5px; font-family: "Courier New", Courier, monospace; font-size: 11px; white-space: pre-wrap; color: #333; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 
@@ -115,26 +142,112 @@
         .log-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; font-size: 13px; }
         .log-cell { padding: 10px; border-bottom: 1px solid #f0f0f0; border-right: 1px solid #f0f0f0; text-align: center; display: flex; flex-direction: column; justify-content: center; min-height: 35px;}
         .log-cell:last-child { border-right: none; }
-        .log-label { font-weight: bold; color: #005EB8; text-align: left; background-color: #F9F9F9; }
-        .log-col-header { color: black; font-weight: normal; background-color: #F9F9F9; text-align: center;}
+        .log-label { font-weight: bold; color: #005EB8; text-align: left; background-color: white; }
+        .log-col-header { color: black; font-weight: normal; background-color: white; text-align: center;}
         .log-value-sched { color: #333; font-weight: 600; font-size: 14px; }
         .log-value-est { color: #666; font-style: italic; font-size: 13px; }
         .log-input { border: 1px solid #ccc; border-radius: 4px; padding: 6px; width: 90%; text-align: center; font-family: inherit; font-size: 14px; color: #000; font-weight: bold; box-sizing: border-box; background: #fff; }
         .log-calc-result { font-weight: bold; color: #005EB8; font-size: 14px; }
         
-        /* FUEL INPUTS */
-        .fuel-input-lg { width: 100%; padding: 15px; font-size: 24px; text-align: center; border: 2px solid #2687E5; border-radius: 10px; color: #005EB8; font-weight: bold; }
+        /* FUEL PLANNING SUBPAGE STYLES */
+        #subpage-fuel-plan { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #F1F7FD; z-index: 200; display: flex; flex-direction: column; 
+        }
+        .fp-table { width: 100%; border-collapse: collapse; font-size: 13px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-top: 10px; }
+        .fp-header-blue { background-color: #2687E5; color: white; font-weight: bold; font-size: 14px; text-transform: uppercase; padding: 8px 15px; }
+        .fp-sub-header { background-color: white; color: black; font-weight: normal; border-bottom: 2px solid #666; text-align: left; }
+        .fp-sub-header th { padding: 8px 15px; font-weight: normal; text-transform: uppercase; font-size: 11px; }
+        .fp-row td { padding: 8px 15px; border-bottom: none; color: #333; font-weight: normal; } 
+        .fp-row-divider td { border-bottom: 1px solid #ccc; padding: 0; height: 1px;} 
+        .fp-input { border: 1px solid #ccc; padding: 5px; width: 100%; border-radius: 4px; font-weight: normal; box-sizing: border-box; }
+        .fp-final-row td { background-color: white; padding: 15px; }
+        
+        .link-text { color: #2687E5; text-decoration: none; cursor: pointer; font-size: 14px; font-weight: normal; }
+        .link-text:hover { text-decoration: underline; }
+
+        .fp-page-title { 
+            position: absolute; left: 50%; transform: translateX(-50%); 
+            color: #000000; font-size: 17px; font-weight: 600; 
+            white-space: nowrap; z-index: 1;
+        }
+        
+        /* FUEL FMC MAIN GRID - UPDATED */
+        .fuel-main-grid { 
+            display: grid; grid-template-columns: 1fr 1fr 1fr; 
+            background: white; 
+            width: 100%;
+        }
+        .fuel-main-grid.cols-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+        .fuel-main-grid.cols-1 { grid-template-columns: 1fr; } 
+        
+        .fmg-header { 
+            background-color: #2687E5; 
+            color: white; 
+            font-weight: 600; 
+            font-size: 14px; 
+            text-align: center; 
+            padding: 8px; 
+            text-transform: uppercase;
+            white-space: nowrap; /* Impedisce wrap */
+            line-height: 1.2; /* Altezza uniforme */
+        }
+        .fmg-cell { 
+            background-color: white; 
+            color: #333; 
+            font-size: 14px; 
+            text-align: center; 
+            padding: 12px; 
+            font-weight: normal; 
+            border-right: 1px solid #f0f0f0; 
+        }
+        .fmg-cell:last-child { border-right: none; }
+        
+        /* OPERATIONAL IMPACTS TABLE */
+        .impacts-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 12px; }
+        .impacts-table th { padding: 5px; color: #666; font-weight: normal; border-bottom: 1px solid #eee; }
+        .impacts-table td { padding: 8px; color: #333; font-weight: normal; border-right: 1px solid #f9f9f9; } 
+        .impacts-table td:last-child { border-right: none; }
+        .impact-label { color: #005EB8; font-weight: normal; text-align: left; padding-left: 10px; } 
+
+        /* ALTERNATE ROUTES TABLE */
+        .alt-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: center; }
+        .alt-table th { 
+            background-color: white; 
+            color: black; 
+            font-weight: normal; 
+            padding: 8px 4px; 
+            border-bottom: 1px solid #666;
+        }
+        /* GRASSETTO PER HEADER APT */
+        .alt-table th:nth-child(2) { font-weight: 600; } 
+
+        .alt-table td { 
+            padding: 10px 4px; 
+            color: #333; 
+            font-weight: normal;
+            border-bottom: 1px solid #f2f2f7; 
+        }
+        
+        /* Text Utilities */
+        .text-bold { font-weight: 600 !important; }
+        .text-normal { font-weight: 400 !important; }
+        
+        .input-with-t-wrapper { position: relative; display: inline-block; width: 100px; }
+        .input-with-t { padding-right: 20px; text-align: right; width: 100%; box-sizing: border-box; border: 1px solid #ccc; padding: 5px; border-radius: 4px; font-weight: bold; }
+        .t-suffix { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); color: #000; font-weight: bold; font-size: 12px; }
+
     </style>
 </head>
 <body>
 
     <script>
         (function() {
-            var pass = localStorage.getItem('efb_pass_v9'); 
+            var pass = localStorage.getItem('efb_pass_v21'); 
             if (pass !== "Ryanair737") { 
                 var userIn = prompt("ENTER PASSWORD:");
                 if (userIn === "Ryanair737") {
-                    localStorage.setItem('efb_pass_v9', userIn);
+                    localStorage.setItem('efb_pass_v21', userIn);
                 } else {
                     document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
                     throw new Error("Access Denied");
@@ -162,7 +275,6 @@
     <div id="import-modal">
         <div class="modal-box">
             <div class="modal-title">Import from SimBrief</div>
-            
             <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #cce5ff;">
                 <label style="font-size: 11px; font-weight: bold; color: #005EB8; display: block; margin-bottom: 5px;">SIMBRIEF PILOT ID / USERNAME</label>
                 <div style="display: flex; gap: 10px;">
@@ -171,7 +283,6 @@
                 </div>
                 <div id="fetch-status" style="font-size: 10px; color: #666; margin-top: 5px; min-height: 15px;"></div>
             </div>
-
             <div class="modal-desc" style="margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">
                 <strong>Manual Import (Backup):</strong><br>
                 1. <a href="#" id="manual-link" target="_blank" style="color:#007aff;">Click here to open data</a> (Input ID above first)<br>
@@ -179,7 +290,6 @@
                 3. Paste below:
             </div>
             <textarea id="json-input" placeholder="{ ... }"></textarea>
-            
             <div class="modal-actions">
                 <button class="btn-cancel" onclick="chiudiModal()">Close</button>
                 <button class="btn-confirm" onclick="elaboraDatiManuali()">Load Flight</button>
@@ -197,9 +307,12 @@
         </div>
 
         <div id="content-area">
-            <div id="view-log" class="tab-view"><h2>FLIGHT LOG</h2><p>Content...</p></div>
+            <div id="view-log" class="tab-view"><h2>FLIGHT LOG</h2><p>Loading...</p></div>
             <div id="view-lid" class="tab-view hidden"><h2>LID</h2><p>Content...</p></div>
-            <div id="view-fuel" class="tab-view hidden"><h2>FUEL</h2><p>Content...</p></div>
+            
+            <div id="view-fuel" class="tab-view hidden">
+                </div>
+
             <div id="view-wpt" class="tab-view hidden"><h2>WAYPOINTS</h2><p>Content...</p></div>
             
             <div id="view-weather" class="tab-view hidden">
@@ -258,11 +371,22 @@
         </div>
     </div>
 
+    <div id="subpage-fuel-plan" class="hidden">
+        <div id="details-top-bar" style="background:#F1F7FD;">
+            <div class="nav-row">
+                <button class="btn-back-custom" onclick="chiudiFuelPlanning()">&lt; FUEL/FMC</button>
+                <div class="fp-page-title">Fuel Planning</div>
+            </div>
+            <div id="recap-header-fp" class="flight-header-row">HEADER</div>
+        </div>
+        <div id="fuel-plan-content" style="padding: 10px; overflow-y:auto; flex-grow:1;">
+            </div>
+    </div>
+
     <script>
         var datiVoloGlobali = null;
 
         window.onload = function() {
-            // DATE FIX (DD/MM/YYYY Manual)
             let d = new Date();
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
@@ -388,17 +512,18 @@
             let ofpText = data.text.plan_html || (data.text.plan_text ? `<pre>${data.text.plan_text}</pre>` : "OFP not available.");
             document.getElementById('ofp-text-container').innerHTML = ofpText;
 
-            // Header Recap
+            // Header Recap (Main & Subpage)
             let d = new Date(data.times.sched_out * 1000);
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0');
             let year = d.getFullYear();
             let dateFormatted = `${day}/${month}/${year}`;
             
-            let headerHTML = `<b>${callsign}</b> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${data.aircraft.icaocode} &nbsp; Y${data.aircraft.max_passengers} &nbsp; OFP${release}`;
+            let headerHTML = `<span class="header-callsign">${callsign}</span> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${data.aircraft.icaocode} &nbsp; Y${data.aircraft.max_passengers} &nbsp; OFP${release}`;
             document.getElementById('recap-header').innerHTML = headerHTML;
+            document.getElementById('recap-header-fp').innerHTML = headerHTML;
 
-            // IMPORTANTE: QUI SI POPOLANO LE ALTRE PAGINE
+            // POPOLA ALTRE PAGINE
             aggiornaMeteo(data);
             aggiornaFlightLog(data);
             aggiornaFuelPage(data);
@@ -515,7 +640,6 @@
         }
 
         function aggiornaMeteo(data) {
-            // Pagina 0: METAR/TAF (Funziona già)
             var container = document.getElementById('wx-page-0');
             container.innerHTML = ""; 
             if (data.weather) {
@@ -597,20 +721,374 @@
             if (el.style.display === "block") { el.style.display = "none"; chevron.classList.remove('up'); } else { el.style.display = "block"; chevron.classList.add('up'); }
         }
 
-        // --- FUEL PAGE FUNCTION ---
+        // --- FUEL PAGE LOGIC (MAIN & SUBPAGE) ---
         function aggiornaFuelPage(data) {
-            let plannedBlock = data.fuel.plan_ramp || 0;
-            let html = `
-                <div class="section-box">
-                    <div class="section-title">FUEL INITIALIZATION</div>
-                    <div style="display:flex; flex-direction:column; gap:10px; align-items:center; padding:20px;">
-                        <label style="font-weight:bold; color:#333;">FINAL BLOCK FUEL (KGS)</label>
-                        <input type="number" id="input-final-block" class="fuel-input-lg" value="${plannedBlock}" onchange="calcolaCarburante()">
-                        <div style="font-size:11px; color:#666; margin-top:5px;">Default from SimBrief OFP</div>
+            let f = data.fuel;
+            let plannedBlock = f.plan_ramp || 0;
+            
+            // Popola Main Page FUEL/FMC
+            let mainHtml = `
+                <div class="section-box-full" style="margin-top:15px;">
+                    <div class="fuel-main-grid">
+                        <div class="fmg-header">TOTAL FUEL</div>
+                        <div class="fmg-header">FINAL BLK</div>
+                        <div class="fmg-header"></div> 
+                        <div class="fmg-cell" id="main-total-fuel">--</div>
+                        <div class="fmg-cell text-bold" id="main-final-blk">-- T</div>
+                        <div class="fmg-cell" style="display:flex; justify-content:center; align-items:center;">
+                            <a href="#" class="link-text" onclick="apriFuelPlanning()">Fuel Planning &gt;</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-box-full">
+                    <div class="fuel-main-grid cols-4">
+                        <div class="fmg-header" style="text-transform:none;">eTOW</div>
+                        <div class="fmg-header">(MTOW)</div>
+                        <div class="fmg-header" style="text-transform:none;">eLW</div>
+                        <div class="fmg-header">(MLW)</div>
+
+                        <div class="fmg-cell text-normal">${(data.weights.est_tow / 1000).toFixed(1)}</div>
+                        <div class="fmg-cell text-normal">${(data.weights.max_tow / 1000).toFixed(1)}</div>
+                        <div class="fmg-cell text-normal">${(data.weights.est_ldw / 1000).toFixed(1)}</div>
+                        <div class="fmg-cell text-normal">${(data.weights.max_ldw / 1000).toFixed(1)}</div>
+
+                        <div class="fmg-header">GND DIST</div> <div class="fmg-header"></div>          <div class="fmg-header"></div>          <div class="fmg-header"></div>          <div class="fmg-cell text-bold">${data.general.route_distance}</div>
+                        <div class="fmg-cell"></div>
+                        <div class="fmg-cell"></div>
+                        <div class="fmg-cell"></div>
+                    </div>
+                </div>
+
+                <div class="section-box-full margin-extra">
+                    <div class="fmg-header" style="text-align:left; padding-left:20px;">ALTERNATE ROUTES</div>
+                    <div class="fmg-cell" style="padding:0; border:none;">
+                        <table class="alt-table">
+                            <tr><th>RANK</th><th>APT</th><th>TRK</th><th>DST</th><th>VIA</th><th>FL</th><th>MORA</th><th>WC</th><th>TIME</th><th>FUEL</th></tr>
+                            <div style="border-bottom: 1px solid #666;"></div>
+                            ${generateAlternateRows(data)}
+                        </table>
+                    </div>
+                </div>
+
+                <div class="section-box-full">
+                    <div class="fuel-main-grid">
+                        <div class="fmg-header">DEP</div>
+                        <div class="fmg-header">ARR</div>
+                        <div class="fmg-header">CALLSIGN</div>
+
+                        <div class="fmg-cell text-bold">${data.origin.icao_code}</div>
+                        <div class="fmg-cell text-bold">${data.destination.icao_code}</div>
+                        <div class="fmg-cell text-bold">${data.atc.callsign}</div>
+                    </div>
+                </div>
+
+                <div class="section-box-full">
+                     <div class="fmg-header" style="text-align:center;">ROUTE</div>
+                     <div class="fmg-cell" style="text-align:left; border:none; padding:15px; font-family:inherit; font-size:14px; font-weight:normal; line-height:1.4; border-top:1px solid #f0f0f0;">
+                        ${data.origin.icao_code}/${data.origin.plan_rwy} ${data.general.route} ${data.destination.icao_code}/${data.destination.plan_rwy}
+                     </div>
+                </div>
+
+                <div class="section-box-full">
+                    <div class="fuel-main-grid">
+                        <div class="fmg-header" style="text-align:left; padding-left:20px;"><span class="text-bold" style="text-transform:none;">eZFW</span></div>
+                        <div class="fmg-header"><span class="text-normal">(MZFW)</span></div>
+                        <div class="fmg-header" style="text-align:right; padding-right:20px;"><span class="text-bold">CRZ ALT</span></div>
+
+                        <div class="fmg-cell text-bold" style="text-align:left; padding-left:20px;">${(data.weights.est_zfw / 1000).toFixed(1)}</div>
+                        <div class="fmg-cell text-normal">${(data.weights.max_zfw / 1000).toFixed(1)}</div>
+                        <div class="fmg-cell text-normal" style="text-align:right; padding-right:20px;">${Math.floor(data.general.initial_altitude / 100)}</div>
+
+                        <div class="fmg-header" style="text-align:left; padding-left:20px;"><span class="text-bold">RESERVES</span></div>
+                        <div class="fmg-header"><span class="text-normal">(ALTN)</span></div>
+                        <div class="fmg-header" style="text-align:right; padding-right:20px;"><span class="text-bold">CRZ WIND</span></div>
+
+                        <div class="fmg-cell text-normal" style="text-align:left; padding-left:20px;">
+                            ${((parseInt(f.reserve)+parseInt(f.alternate_burn))/1000).toFixed(1)} 
+                            (${parseInt(f.reserve)+parseInt(f.alternate_burn)})
+                        </div>
+                        <div class="fmg-cell text-normal" id="alt-code-disp">--</div>
+                        <div class="fmg-cell text-normal" id="toc-wind-disp" style="text-align:right; padding-right:20px;">--/--</div>
+
+                        <div class="fmg-header" style="text-align:left; padding-left:20px;"><span class="text-bold">COST INDEX</span></div>
+                        <div class="fmg-header"></div>
+                        <div class="fmg-header" style="text-align:right; padding-right:20px;"><span class="text-bold">ISA DEV</span></div>
+
+                        <div class="fmg-cell text-normal" id="ci-disp" style="text-align:left; padding-left:20px;">--</div>
+                        <div class="fmg-cell"></div>
+                        <div class="fmg-cell text-normal" id="isa-dev-disp" style="text-align:right; padding-right:20px;">P000</div>
+                    </div>
+                </div>
+                
+                <div class="section-box-full">
+                    <div class="fuel-main-grid" style="grid-template-columns: 1fr 1fr;">
+                        <div class="fmg-header">AVG WIND</div>
+                        <div class="fmg-header">FL STEPS</div>
+                        
+                        <div class="fmg-cell text-normal">${data.general.avg_wind_dir}/${data.general.avg_wind_spd}</div>
+                        <div class="fmg-cell text-normal">${data.general.stepclimb_string}</div>
+                    </div>
+                </div>
+
+                <div class="section-box-full">
+                    <div class="fuel-main-grid cols-1">
+                         <div class="fmg-header">DEPARTURE ATIS</div>
+                         <div class="fmg-cell" style="min-height: 40px;"></div>
+                    </div>
+                </div>
+
+                <div class="section-box-full">
+                     <div class="fuel-main-grid cols-1">
+                         <div class="fmg-header">DEPARTURE ATC CLEARANCE</div>
+                         <div class="fmg-cell" style="min-height: 40px;"></div>
+                     </div>
+                </div>
+
+                <div class="section-box-full">
+                    <div class="fuel-main-grid cols-1">
+                        <div class="fmg-header">OPERATIONAL IMPACTS</div>
+                        <div class="fmg-cell" style="padding:0; border:none;">
+                            ${renderImpactsTable(data.impacts)}
+                        </div>
                     </div>
                 </div>
             `;
-            document.getElementById('view-fuel').innerHTML = html;
+            document.getElementById('view-fuel').innerHTML = mainHtml;
+
+            // --- DATA FIXES ---
+            let altCode = "NONE";
+            if (data.alternate && Array.isArray(data.alternate) && data.alternate.length > 0) {
+                altCode = data.alternate[0].iata_code;
+            } else if (data.alternate && data.alternate.iata_code) {
+                altCode = data.alternate.iata_code;
+            }
+            document.getElementById('alt-code-disp').innerText = altCode;
+
+            let ci = data.general.costindex || data.general.cost_index || "N/A";
+            document.getElementById('ci-disp').innerText = ci;
+
+            if(data.navlog && data.navlog.fix) {
+                let fixes = Array.isArray(data.navlog.fix) ? data.navlog.fix : [data.navlog.fix];
+                let tocFix = fixes.find(fix => fix.type === "TOC" || fix.ident === "TOC" || fix.name === "TOC");
+                if(!tocFix) {
+                    tocFix = fixes.find(fix => parseInt(fix.altitude) >= parseInt(data.general.initial_altitude) - 100);
+                }
+                if(tocFix) {
+                    document.getElementById('toc-wind-disp').innerText = `${tocFix.wind_dir}/${tocFix.wind_spd}`;
+                    let val = parseInt(tocFix.oat_isa_dev || tocFix.isadev || 0); 
+                    let prefix = val >= 0 ? "P" : "M";
+                    let valStr = String(Math.abs(val)).padStart(3, '0');
+                    document.getElementById('isa-dev-disp').innerText = prefix + valStr;
+                }
+            }
+
+            renderFuelPlanningSubpage(data);
+            syncFinalBlock();
+        }
+
+        // Generate Alternate Rows (BOLD APT)
+        function generateAlternateRows(data) {
+            let alts = [];
+            if (data.alternate) {
+                alts = Array.isArray(data.alternate) ? data.alternate : [data.alternate];
+            }
+            
+            let html = "";
+            alts.forEach((alt, index) => {
+                let rank = "C" + (index + 1);
+                let apt = alt.icao_code + "/" + alt.iata_code;
+                let trk = alt.track_mag || alt.track_true || "--";
+                let dst = alt.distance || "--";
+                let via = alt.route || "--";
+                let fl = alt.cruise_altitude ? Math.round(alt.cruise_altitude/100) : "--";
+                let mora = alt.mora || ""; 
+                let wc = alt.avg_wind_comp || "";
+                
+                if(wc && !isNaN(wc)) {
+                    wc = (parseInt(wc) >= 0 ? "P" : "M") + String(Math.abs(parseInt(wc))).padStart(3,'0');
+                }
+                
+                let time = formatDuration(alt.ete);
+                let fuel = alt.burn;
+
+                html += `<tr>
+                    <td>${rank}</td>
+                    <td style="font-weight:600;">${apt}</td> <td>${trk}</td>
+                    <td>${dst}</td>
+                    <td style="text-align:left; font-size:11px;">${via}</td>
+                    <td>${fl}</td>
+                    <td>${mora}</td>
+                    <td>${wc}</td>
+                    <td>${time}</td>
+                    <td>${fuel}</td>
+                </tr>`;
+            });
+            return html;
+        }
+
+        // Helper render Impacts
+        function renderImpactsTable(impacts) {
+            const getData = (obj, key) => (obj && obj[key] !== undefined) ? obj[key] : null;
+
+            const fmtDiff = (burn, time) => {
+                if (burn === null || time === null) return `<td colspan="2">NOT AVAILABLE</td>`;
+                
+                let burnVal = parseInt(burn);
+                let burnPrefix = burnVal >= 0 ? "P" : "M";
+                let burnStr = `TRIP ${burnPrefix}${String(Math.abs(burnVal)).padStart(4, '0')} KGS`; 
+
+                let timeVal = parseInt(time); // Seconds
+                let mins = Math.round(timeVal / 60);
+                let timePrefix = mins >= 0 ? "P" : "M";
+                let timeStr = `TIME ${timePrefix}${String(Math.abs(mins)).padStart(4, '0')}`; 
+                
+                return `<td>${burnStr}</td><td>${timeStr}</td>`;
+            };
+
+            let plus2000 = impacts.plus_2000ft || {};
+            let minus2000 = impacts.minus_2000ft || {};
+            let plusZfw = impacts.zfw_plus_1000 || {};
+
+            let row1 = fmtDiff(getData(plus2000, 'burn_difference'), getData(plus2000, 'time_difference'));
+            let row2 = fmtDiff(getData(minus2000, 'burn_difference'), getData(minus2000, 'time_difference'));
+            let row3 = fmtDiff(getData(plusZfw, 'burn_difference'), getData(plusZfw, 'time_difference'));
+
+            return `
+                <table class="impacts-table">
+                    <tr>
+                        <td class="impact-label">FL CHANGE</td>
+                        <td style="text-align:left;">2000 ABOVE</td>
+                        ${row1}
+                    </tr>
+                    <tr>
+                        <td class="impact-label">FL CHANGE</td>
+                        <td style="text-align:left;">2000 BELOW</td>
+                        ${row2}
+                    </tr>
+                    <tr>
+                        <td class="impact-label">WEIGHT CHANGE UP 1.0</td>
+                        <td></td>
+                        ${row3}
+                    </tr>
+                </table>
+            `;
+        }
+
+        function renderFuelPlanningSubpage(data) {
+            let fpContent = document.getElementById('fuel-plan-content');
+            let f = data.fuel;
+            let plannedBlock = f.plan_ramp || 0;
+            // (Logica identica a prima per calcoli)
+            let trip = parseInt(f.enroute_burn || 0);
+            let tripTime = formatDuration(data.times.est_time_enroute);
+            let cont = parseInt(f.contingency || 0);
+            let contTime = formatDuration(data.fuel.contingency_time || data.times.contfuel_time || 0);
+            let altCode = "NONE";
+            let altTimeVal = 0;
+            if (data.alternate && Array.isArray(data.alternate) && data.alternate.length > 0) {
+                altCode = data.alternate[0].iata_code;
+                altTimeVal = data.alternate[0].ete;
+            } else if (data.alternate && data.alternate.iata_code) {
+                altCode = data.alternate.iata_code;
+                altTimeVal = data.alternate.ete;
+            }
+            let altBurn = parseInt(f.alternate_burn || 0);
+            let altTime = formatDuration(altTimeVal);
+            let finRes = parseInt(f.reserve || 0);
+            let finResTime = "00:30"; 
+            let addRes = parseInt(f.extra_required || 0);
+            let addResTime = formatDuration(f.extra_time || 0);
+            let plannedTOff = trip + cont + altBurn + finRes + addRes;
+            let secPlannedTOff = parseInt(data.times.est_time_enroute || 0) + parseInt(data.fuel.contingency_time || 0) + parseInt(altTimeVal || 0) + 1800 + parseInt(f.extra_time || 0);
+            let plannedTOffTime = formatDuration(secPlannedTOff);
+            let opn = parseInt(f.extra_optional || 0);
+            let opnTime = formatDuration(f.extra_optional_time || 0);
+            let tOffFuel = plannedTOff + opn;
+            let tOffTime = formatDuration(secPlannedTOff + parseInt(f.extra_optional_time || 0));
+            let taxi = parseInt(f.taxi || 0);
+            let taxiTime = formatDuration(data.times.taxi_out || 0);
+            let depCode = data.origin.iata_code;
+            let blockFuel = parseInt(f.plan_ramp || 0); 
+
+            let fpTable = `
+                <div class="fp-table">
+                    <div class="fp-header-blue">PLANNED FUEL</div>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr class="fp-sub-header"><th>FUEL</th><th>ARPT</th><th style="font-weight:bold;">FUEL</th><th>TIME</th></tr>
+                        <tr class="fp-row"><td>TRIP</td><td>${data.destination.iata_code}</td><td>${trip}</td><td>${tripTime}</td></tr>
+                        <tr class="fp-row"><td>CONT 5%</td><td></td><td>${cont}</td><td>${contTime}</td></tr>
+                        <tr class="fp-row"><td>ALT</td><td>${altCode}</td><td>${altBurn}</td><td>${altTime}</td></tr>
+                        <tr class="fp-row"><td>FINAL RES</td><td></td><td>${finRes}</td><td>${finResTime}</td></tr>
+                        <tr class="fp-row"><td>ADD RES</td><td></td><td>${addRes}</td><td>${addResTime}</td></tr>
+                        <tr class="fp-row-divider"><td colspan="4"></td></tr>
+                        <tr class="fp-row"><td>PLANNED T/OFF FUEL</td><td></td><td>${plannedTOff}</td><td>${plannedTOffTime}</td></tr>
+                        <tr class="fp-row-divider"><td colspan="4"></td></tr>
+                        <tr class="fp-row"><td>OPN</td><td></td><td>${opn}</td><td>${opnTime}</td></tr>
+                        <tr class="fp-row-divider"><td colspan="4"></td></tr>
+                        <tr class="fp-row"><td>T/OFF FUEL</td><td></td><td>${tOffFuel}</td><td>${tOffTime}</td></tr>
+                        <tr class="fp-row"><td>TAXI</td><td>${depCode}</td><td>${taxi}</td><td>${taxiTime}</td></tr>
+                        <tr class="fp-row-divider"><td colspan="4"></td></tr>
+                        <tr class="fp-row"><td>BLOCK FUEL</td><td>${depCode}</td><td id="fp-block">${blockFuel}</td><td></td></tr>
+                        <tr class="fp-row"><td>PIC EXTRA</td><td></td><td><input type="number" id="fp-extra" class="fp-input" placeholder="0" onchange="ricalcolaFuelPlan()"></td><td></td></tr>
+                        <tr class="fp-row"><td>TOTAL FUEL</td><td></td><td id="fp-total" style="font-weight:bold;">${blockFuel}</td><td></td></tr>
+                        <tr class="fp-row"><td colspan="2" style="font-size:11px;">REASON FOR PIC EXTRA</td><td colspan="2"><input type="text" class="fp-input" style="font-weight:normal;"></td></tr>
+                        <tr class="fp-row-divider"><td colspan="4"></td></tr>
+                        <tr class="fp-final-row"><td style="font-weight:bold; font-size:14px; color:black;">FINAL BLK</td><td colspan="3"><div class="input-with-t-wrapper"><input type="number" id="fp-final-blk-tons" class="input-with-t" value="${(blockFuel/1000).toFixed(1)}" step="0.1" onchange="syncFinalBlock()"><span class="t-suffix">T</span></div></td></tr>
+                    </table>
+                </div>
+            `;
+            fpContent.innerHTML = fpTable;
+        }
+
+        function apriFuelPlanning() {
+            document.getElementById('page-details').classList.add('hidden');
+            document.getElementById('subpage-fuel-plan').classList.remove('hidden');
+        }
+
+        function chiudiFuelPlanning() {
+            document.getElementById('subpage-fuel-plan').classList.add('hidden');
+            document.getElementById('page-details').classList.remove('hidden');
+        }
+
+        window.ricalcolaFuelPlan = function() {
+            let block = parseInt(document.getElementById('fp-block').innerText);
+            let extra = parseInt(document.getElementById('fp-extra').value) || 0;
+            let total = block + extra;
+            document.getElementById('fp-total').innerText = total;
+            let tons = (total / 1000).toFixed(1);
+            document.getElementById('fp-final-blk-tons').value = tons;
+            syncFinalBlock();
+        }
+
+        window.syncFinalBlock = function() {
+            let tons = parseFloat(document.getElementById('fp-final-blk-tons').value);
+            let totalKg = document.getElementById('fp-total').innerText; 
+            let elMainTotal = document.getElementById('main-total-fuel');
+            let elMainFinal = document.getElementById('main-final-blk');
+            if(elMainTotal) elMainTotal.innerText = totalKg;
+            if(elMainFinal) elMainFinal.innerText = tons + " T";
+            let dispBlock = document.getElementById('disp-block-fuel');
+            if(dispBlock) {
+                let kgs = Math.round(tons * 1000);
+                dispBlock.innerText = kgs;
+                let hiddenInp = document.getElementById('input-final-block'); 
+                if(!hiddenInp) {
+                    hiddenInp = document.createElement('input');
+                    hiddenInp.id = 'input-final-block';
+                    hiddenInp.type = 'hidden';
+                    document.body.appendChild(hiddenInp);
+                }
+                hiddenInp.value = kgs;
+                calcolaCarburante();
+            }
+        }
+
+        function formatDuration(sec) {
+            if(!sec) return "00:00";
+            let h = Math.floor(sec/3600);
+            let m = Math.floor((sec%3600)/60);
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
         }
 
         // --- FLIGHT LOG FUNCTION ---
@@ -631,7 +1109,6 @@
                     <div class="log-header">
                         <span>FLIGHT TIMES (OOOI)</span>
                     </div>
-                    
                     <div class="log-grid">
                         <div class="log-cell log-col-header"></div> 
                         <div class="log-cell log-col-header">SCHED</div>
@@ -700,9 +1177,8 @@
 
             document.getElementById('view-log').innerHTML = html;
         }
+
         // --- GLOBAL CALCULATION FUNCTIONS ---
-        
-        // 1. Time Calculation (OOOI)
         window.calcolaTempi = function() {
             const getMin = (id) => {
                 let val = document.getElementById(id).value;
@@ -729,44 +1205,29 @@
             document.getElementById('val-flight').innerText = calcDiff(offT, onT);
         }
 
-        // 2. Fuel Calculation
-       window.calcolaCarburante = function() {
-            // 1. Recupera i dati Actual inseriti
-            let blockInput = document.getElementById('input-final-block');
-            let blockFuel = blockInput ? parseFloat(blockInput.value) : 0;
+        window.calcolaCarburante = function() {
+            let dispBlock = document.getElementById('disp-block-fuel');
+            let blockFuel = dispBlock ? parseFloat(dispBlock.innerText) : 0;
 
             let arrInput = document.getElementById('input-arr-fuel');
             let arrFuel = arrInput ? parseFloat(arrInput.value) : 0;
 
-            // Aggiorna la visualizzazione del Block Actual
-            let dispBlock = document.getElementById('disp-block-fuel');
-            if(dispBlock) dispBlock.innerText = blockFuel;
-
-            // 2. Recupera i dati Planned da SimBrief (Dati Globali)
             let plannedTrip = 0;
             let plannedArr = 0;
-            
             if(datiVoloGlobali && datiVoloGlobali.fuel) {
                 plannedTrip = parseFloat(datiVoloGlobali.fuel.enroute_burn || 0);
                 plannedArr = parseFloat(datiVoloGlobali.fuel.plan_landing || 0);
             }
 
-            // 3. Esegui i calcoli se i dati sono presenti
             if(blockFuel > 0 && arrFuel > 0) {
-                
-                // CALCOLO TRIP ACTUAL
                 let actualTrip = blockFuel - arrFuel;
                 document.getElementById('val-act-trip').innerText = actualTrip;
 
-                // CALCOLO DIFF TRIP (Actual - Planned)
-                // Se positivo (bruciato di più) = Rosso. Se negativo (risparmiato) = Verde.
                 let diffTrip = actualTrip - plannedTrip;
                 let elTripDiff = document.getElementById('val-trip-diff');
                 elTripDiff.innerText = (diffTrip > 0 ? "+" : "") + diffTrip;
                 elTripDiff.style.color = diffTrip > 0 ? "red" : "green";
 
-                // CALCOLO DIFF ARRIVAL (Actual - Planned)
-                // Se positivo (più carburante all'arrivo) = Verde. Se negativo = Rosso.
                 let diffArr = arrFuel - plannedArr;
                 let elArrDiff = document.getElementById('val-arr-diff');
                 elArrDiff.innerText = (diffArr > 0 ? "+" : "") + diffArr;
