@@ -1850,13 +1850,11 @@ function chiudiArrAtisPage() {
 function syncArrAtisSummary() {
     let info = document.getElementById('atis-arr-info').value.toUpperCase();
     let qnh = document.getElementById('atis-arr-qnh').value;
-    let rwy = document.getElementById('atis-arr-rwy').value;
-    
+
     let html = "";
     if(info) html += `<span>${info}</span>`;
-    if(rwy)  html += `<span>RWY ${rwy}</span>`; // Opzionale: mostra pista se vuoi
     if(qnh)  html += `<span>Q${qnh}</span>`;
-    
+
     document.getElementById('atis-arr-summary-display').innerHTML = html;
 }
     </script>
