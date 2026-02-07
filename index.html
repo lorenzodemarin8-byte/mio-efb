@@ -298,7 +298,78 @@
         .input-with-t-wrapper { position: relative; display: inline-block; width: 100px; }
         .input-with-t { padding-right: 20px; text-align: right; width: 100%; box-sizing: border-box; border: 1px solid #ccc; padding: 5px; border-radius: 4px; font-weight: bold; }
         .t-suffix { position: absolute; right: 5px; top: 50%; transform: translateY(-50%); color: #000; font-weight: bold; font-size: 12px; }
+/* STILE X ROSSA (Normale, non grassetto) */
+        .btn-delete-flight {
+            background: none; 
+            border: none; 
+            color: #ff3b30; 
+            font-size: 20px; 
+            font-weight: normal; /* Modificato: era bold */
+            cursor: pointer; 
+            padding: 0 10px;
+            line-height: 1;
+        }
+        .btn-delete-flight:hover { 
+            color: #d32f2f; 
+            background-color: rgba(255, 0, 0, 0.1); 
+            border-radius: 4px;
+        }
+        /* --- STILE NAVLOG (MATCH FUEL/FMC) --- */
+.navlog-container-final {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-top: 15px;
+    border: none;
+}
 
+.navlog-table-final {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* Intestazione Blu - Senza righe verticali */
+.navlog-header-final {
+    background-color: #2687E5;
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 4px;
+    vertical-align: middle;
+    line-height: 1.3;
+    text-transform: uppercase;
+    border: none; /* RIMOSSO BORDO */
+}
+
+/* Celle del corpo tabella - Senza righe orizzontali */
+.navlog-row td {
+    padding: 6px 4px;
+    border: none; /* RIMOSSO BORDO */
+    color: #333;
+    vertical-align: middle;
+}
+
+/* Input manuali (ATO, AFOB, ABRN) */
+.navlog-input {
+    width: 50px;
+    padding: 4px;
+    border: 1px solid #ccc; /* Questo bordo rimane per far vedere la casella */
+    border-radius: 4px;
+    text-align: center;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000;
+}
+
+/* Waypoint (Leggero grassetto) */
+.wpt-bold {
+    font-weight: 600;
+    color: #000;
+}
     </style>
 </head>
 <body>
@@ -375,7 +446,30 @@
             <div id="view-fuel" class="tab-view hidden">
                 </div>
 
-            <div id="view-wpt" class="tab-view hidden"><h2>WAYPOINTS</h2><p>Content...</p></div>
+           <div id="view-wpt" class="tab-view hidden">
+                <div id="wpt-critical-info" class="section-box" style="text-align: center; font-size: 14px; margin-bottom: 20px; font-weight: normal;">
+                    Computing critical data...
+                </div>
+                
+                <div id="navlog-container"></div>
+                <div class="navlog-container-final">
+    <table class="navlog-table-final">
+        <thead>
+            <tr>
+                <th class="navlog-header-final" style="width: 15%;">AWY<br>POSITION</th>
+                <th class="navlog-header-final" style="width: 10%;">FL<br>MORA</th>
+                <th class="navlog-header-final" style="width: 10%;">IMT<br>DIS</th>
+                <th class="navlog-header-final" style="width: 15%;">WIND<br>SHR</th>
+                <th class="navlog-header-final" style="width: 15%;">TTLT<br>ATO</th>
+                <th class="navlog-header-final" style="width: 15%;">EFOB<br>AFOB</th>
+                <th class="navlog-header-final" style="width: 20%;">PBRN<br>ABRN</th>
+            </tr>
+        </thead>
+        <tbody id="navlog-body-content">
+            </tbody>
+    </table>
+</div>
+            </div>
             
             <div id="view-weather" class="tab-view hidden">
                 <div class="weather-carousel" id="wx-carousel" onscroll="aggiornaPallini()">
@@ -473,11 +567,56 @@
             </div>
         </div>
     </div>
+    <div id="subpage-arr-atis" class="hidden">
+    <div id="details-top-bar" style="background:#F1F7FD;">
+        <div class="nav-row">
+            <button class="btn-back-custom" onclick="chiudiArrAtisPage()">&lt; FUEL/FMC</button>
+            <div class="fp-page-title">Arrival ATIS</div>
+        </div>
+        <div id="recap-header-arr-atis" class="flight-header-row">HEADER</div>
+    </div>
+    <div id="atis-arr-content" style="padding: 10px; overflow-y:auto; flex-grow:1;">
+        <div class="atis-grid">
+            <div class="atis-box"><div class="atis-header-blue">AIRPORT</div><div class="atis-input-area"><input id="atis-arr-apt" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">INFO</div><div class="atis-input-area"><input id="atis-arr-info" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">TIME</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">APPR</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-blue">RWY</div><div class="atis-input-area"><input id="atis-arr-rwy" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">TL/Other Info</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-blue">COND</div><div class="atis-input-area"><input id="atis-arr-cond" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-blue">WIND</div><div class="atis-input-area"><input id="atis-arr-wind" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">VIS</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">WX</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">CLOUD</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-blue">OAT</div><div class="atis-input-area"><input id="atis-arr-oat" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">DP</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+            <div class="atis-box"><div class="atis-header-blue">QNH</div><div class="atis-input-area"><input id="atis-arr-qnh" class="atis-input" type="text" oninput="syncArrAtisSummary()"></div></div>
+            <div class="atis-box"><div class="atis-header-gray">Additional Info</div><div class="atis-input-area"><input class="atis-input" type="text"></div></div>
+        </div>
+    </div>
+</div>
 
     <script>
-        var datiVoloGlobali = null;
+        // --- VARIABILI GLOBALI ---
+        var datiVoloGlobali = null; // Il volo attualmente APERTO/VISUALIZZATO
+        var elencoVoli = [];        // La lista storica dei voli importati
+
+        // --- INIZIALIZZAZIONE ---
+        (function() {
+            var pass = localStorage.getItem('efb_pass_v41'); 
+            if (pass !== "Ryanair737") { 
+                var userIn = prompt("ENTER PASSWORD:");
+                if (userIn === "Ryanair737") {
+                    localStorage.setItem('efb_pass_v41', userIn);
+                } else {
+                    document.body.innerHTML = "<div style='display:flex;justify-content:center;align-items:center;height:100vh;color:red;font-weight:bold;font-size:20px;'>ACCESS DENIED</div>";
+                    throw new Error("Access Denied");
+                }
+            }
+        })();
 
         window.onload = function() {
+            // Data Header
             let d = new Date();
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0'); 
@@ -485,13 +624,24 @@
             let today = `${day}/${month}/${year}`;
             document.getElementById('home-date-header').innerText = today;
             
+            // Username Salvato
             let savedUser = localStorage.getItem('sb_username');
             if(savedUser) {
                 document.getElementById('sb-username').value = savedUser;
                 updateManualLink(savedUser);
             }
+
+            // Recupera voli salvati (se vuoi che rimangano anche chiudendo il browser)
+            let savedFlightsData = localStorage.getItem('efb_flight_history');
+            if (savedFlightsData) {
+                try {
+                    elencoVoli = JSON.parse(savedFlightsData);
+                    aggiornaTabellaVoli();
+                } catch(e) { console.error("Errore lettura storico voli", e); }
+            }
         };
 
+        // --- GESTIONE IMPORTAZIONE ---
         document.getElementById('sb-username').addEventListener('input', function(e) {
             updateManualLink(e.target.value);
         });
@@ -515,6 +665,7 @@
             statusDiv.innerText = "Connecting to SimBrief...";
             statusDiv.style.color = "#005EB8";
 
+            // URL SimBrief
             let url = `https://www.simbrief.com/api/xml.fetcher.php?userid=${username}&json=1`;
 
             try {
@@ -523,15 +674,17 @@
                 let data = await response.json();
                 if (!data || !data.general) throw new Error("Invalid data.");
 
-                popolaApp(data);
-                statusDiv.innerText = "Flight loaded successfully!";
+                // NUOVA LOGICA: Aggiungi alla lista invece di sovrascrivere subito
+                aggiungiVoloALista(data);
+                
+                statusDiv.innerText = "Flight imported!";
                 statusDiv.style.color = "green";
                 setTimeout(chiudiModal, 500);
 
             } catch (e) {
                 statusDiv.innerText = "Error: " + e.message;
                 statusDiv.style.color = "red";
-                alert("Import Error: " + e.message + "\n\nNote: If local, use 'Paste JSON' or upload online.");
+                alert("Import Error: " + e.message);
             }
         }
 
@@ -541,49 +694,113 @@
             var inizio = testo.indexOf('{');
             var fine = testo.lastIndexOf('}');
             if (inizio === -1 || fine === -1) { alert("No valid JSON found."); return; }
-            var testoPulito = testo.substring(inizio, fine + 1);
-            try { var data = JSON.parse(testoPulito); popolaApp(data); chiudiModal(); } catch (e) { alert("Error parsing data: " + e.message); }
-        }
-
-        function formatName(str) {
-            if (!str) return "";
-            return str.toLowerCase().split(' ').map(function(word) {
-                return word.charAt(0).toUpperCase() + word.slice(1);
-            }).join(' ');
-        }
-
-        function popolaApp(data) {
-            datiVoloGlobali = data;
-            document.getElementById('empty-state').classList.add('hidden');
-
-            let flightNum = data.general.icao_airline + data.general.flight_number;
-            let callsign = data.atc.callsign;
-            let dep = data.origin.iata_code;
-            let arr = data.destination.iata_code;
-            let std = new Date(data.times.sched_out * 1000).toISOString().substr(11, 5);
-            let sta = new Date(data.times.sched_in * 1000).toISOString().substr(11, 5);
-            let date = new Date(data.times.sched_out * 1000).toISOString().substr(0, 10);
-            let reg = data.aircraft.reg;
-            let config = data.aircraft.name;
-            let release = data.general.release;
-
-            let tbody = document.getElementById('flight-table-body');
-            let riga = `
-                <tr onclick="apriVolo()">
-                    <td>${flightNum}</td>
-                    <td>${callsign}</td>
-                    <td>${dep}</td>
-                    <td>${arr}</td>
-                    <td>${std}</td>
-                    <td>${sta}</td>
-                    <td>${date}</td>
-                    <td>${reg}</td>
-                    <td>${config}</td>
-                    <td style="text-align:center;">${release}</td>
-                </tr>
-            `;
-            tbody.innerHTML = riga;
             
+            try { 
+                var data = JSON.parse(testo.substring(inizio, fine + 1)); 
+                aggiungiVoloALista(data);
+                chiudiModal(); 
+            } catch (e) { alert("Error parsing data: " + e.message); }
+        }
+
+        // --- GESTIONE LISTA VOLI (CORE LOGIC) ---
+        function aggiungiVoloALista(data) {
+            // Identificativo unico del volo (es. request_id o generated time)
+            let flightId = data.params.request_id || (data.general.flight_number + data.params.time_generated);
+
+            // Controlla se esiste già
+            let index = elencoVoli.findIndex(v => {
+                let vId = v.params.request_id || (v.general.flight_number + v.params.time_generated);
+                return vId === flightId;
+            });
+
+            if (index > -1) {
+                // Se esiste, aggiornalo (spostalo in cima?)
+                elencoVoli[index] = data;
+                // Opzionale: spostalo in cima
+                elencoVoli.splice(index, 1);
+                elencoVoli.unshift(data);
+            } else {
+                // Se è nuovo, aggiungi in cima
+                elencoVoli.unshift(data);
+            }
+
+            // Limita la storia a, diciamo, 5 voli per non appesantire
+            if (elencoVoli.length > 5) elencoVoli.pop();
+
+            // Salva in LocalStorage
+            localStorage.setItem('efb_flight_history', JSON.stringify(elencoVoli));
+
+            // Aggiorna UI e apri l'ultimo importato
+            aggiornaTabellaVoli();
+            
+        }
+
+        function aggiornaTabellaVoli() {
+            let tbody = document.getElementById('flight-table-body');
+            let emptyState = document.getElementById('empty-state');
+            
+            tbody.innerHTML = ""; 
+
+            if (elencoVoli.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            
+            elencoVoli.forEach((volo, index) => {
+                let flightNum = volo.general.icao_airline + volo.general.flight_number;
+                let callsign = volo.atc.callsign;
+                let dep = volo.origin.iata_code;
+                let arr = volo.destination.iata_code;
+                let std = new Date(volo.times.sched_out * 1000).toISOString().substr(11, 5);
+                let sta = new Date(volo.times.sched_in * 1000).toISOString().substr(11, 5);
+                
+                // --- MODIFICA DATA (dd/mm/yyyy) ---
+                let dObj = new Date(volo.times.sched_out * 1000);
+                let day = String(dObj.getDate()).padStart(2, '0');
+                let month = String(dObj.getMonth() + 1).padStart(2, '0');
+                let year = dObj.getFullYear();
+                let date = `${day}/${month}/${year}`;
+                // ----------------------------------
+
+                let reg = volo.aircraft.reg;
+                let config = volo.aircraft.name;
+                let release = volo.general.release;
+
+                let row = `
+                    <tr onclick="apriVolo(${index})">
+                        <td>${flightNum}</td>
+                        <td>${callsign}</td>
+                        <td>${dep}</td>
+                        <td>${arr}</td>
+                        <td>${std}</td>
+                        <td>${sta}</td>
+                        <td>${date}</td>
+                        <td>${reg}</td>
+                        <td>${config}</td>
+                        <td style="text-align:center;">${release}</td>
+                        <td style="text-align:center;" onclick="rimuoviVolo(event, ${index})"><button class="btn-delete-flight">&times;</button></td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function apriVolo(index) {
+            // Carica i dati globali dal volo selezionato nell'array
+            if (!elencoVoli[index]) return;
+            
+            datiVoloGlobali = elencoVoli[index]; // Setta il volo attivo
+            popolaDettagli(datiVoloGlobali);     // Popola tutte le pagine
+            
+            // Switch vista
+            document.getElementById('page-home').classList.add('hidden');
+            document.getElementById('page-details').classList.remove('hidden');
+        }
+
+        // --- POPOLAMENTO PAGINE (Ex popolaApp, ora diviso) ---
+        function popolaDettagli(data) {
             // CREW
             let crewHtml = '<table class="crew-table"><tbody>';
             const genCode = () => Math.random().toString(36).substring(2, 7).toUpperCase();
@@ -600,7 +817,7 @@
             crewHtml += '</tbody></table>';
             document.getElementById('crew-content').innerHTML = crewHtml;
 
-            // --- OFP TEXT FIX (Reinstated Logic) ---
+            // OFP TEXT
             let ofpText = "";
             if (data.text && data.text.plan_html) {
                 ofpText = data.text.plan_html;
@@ -611,36 +828,46 @@
             }
             document.getElementById('ofp-text-container').innerHTML = ofpText;
 
-            // Header Recap (Main & Subpage)
+            // HEADER RECAP
             let d = new Date(data.times.sched_out * 1000);
             let day = String(d.getDate()).padStart(2, '0');
             let month = String(d.getMonth() + 1).padStart(2, '0');
             let year = d.getFullYear();
             let dateFormatted = `${day}/${month}/${year}`;
             
-            // HEADER con Classi
-            let headerHTML = `<span class="header-callsign">${callsign}</span> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${reg} &nbsp; ${dep} &nbsp; ${arr} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${data.aircraft.icaocode} &nbsp; Y${data.aircraft.max_passengers} &nbsp; OFP${release}`;
+            let flightNum = data.general.icao_airline + data.general.flight_number;
+            let std = new Date(data.times.sched_out * 1000).toISOString().substr(11, 5);
+            let sta = new Date(data.times.sched_in * 1000).toISOString().substr(11, 5);
+
+            let headerHTML = `<span class="header-callsign">${data.atc.callsign}</span> &nbsp; ${dateFormatted} &nbsp; ${flightNum} &nbsp; ${data.aircraft.reg} &nbsp; ${data.origin.iata_code} &nbsp; ${data.destination.iata_code} &nbsp; ${std} &nbsp; ${sta} &nbsp; ${data.aircraft.icaocode} &nbsp; Y${data.aircraft.max_passengers} &nbsp; OFP${data.general.release}`;
             document.getElementById('recap-header').innerHTML = headerHTML;
             document.getElementById('recap-header-fp').innerHTML = headerHTML;
             document.getElementById('recap-header-atis').innerHTML = headerHTML;
-
+document.getElementById('recap-header-arr-atis').innerHTML = headerHTML;
             // POPOLA ALTRE PAGINE
             aggiornaMeteo(data);
             aggiornaFlightLog(data);
             aggiornaFuelPage(data);
+            aggiornaWaypoints(data);
+            aggiornaNavLogTable(data)
             
-            // NO AUTO-POPULATION OF ATIS
+            // ATIS INIT
             syncAtisSummary(); 
         }
 
-        function apriVolo() {
-            document.getElementById('page-home').classList.add('hidden');
-            document.getElementById('page-details').classList.remove('hidden');
+        // --- UTILS ---
+        function formatName(str) {
+            if (!str) return "";
+            return str.toLowerCase().split(' ').map(function(word) {
+                return word.charAt(0).toUpperCase() + word.slice(1);
+            }).join(' ');
         }
-
+        
         function tornaHome() {
             document.getElementById('page-details').classList.add('hidden');
             document.getElementById('page-home').classList.remove('hidden');
+            // Quando torno alla home, aggiorno la tabella per sicurezza
+            aggiornaTabellaVoli();
         }
 
         function cambiaTab(idTab, bottone, titoloPagina) {
@@ -680,6 +907,9 @@
             return `${day} ${month} at ${hh}:${mm} UTC`;
         }
 
+        // ... TUTTE LE ALTRE FUNZIONI HELPER (analizzaMetar, calcolaVentoHtml, etc.) RIMANGONO UGUALI ...
+        // ... ASSICURATI DI INCLUDERE LE FUNZIONI DI METEO E FUEL PAGE QUI SOTTO ...
+        
         function analizzaMetar(metar, sbVis, sbCeil) {
             let cat = "VMC"; let catClass = "bg-green";
             let visDisplay = sbVis ? sbVis : "N/A";
@@ -746,6 +976,8 @@
         function aggiornaMeteo(data) {
             var container = document.getElementById('wx-page-0');
             container.innerHTML = ""; 
+            
+            // --- 1. PARTE TESTUALE (METAR/TAF) - INVARIATA ---
             if (data.weather) {
                 var w = data.weather;
                 let depPlan = data.origin.plan_rwy || data.origin.planned_runway;
@@ -786,33 +1018,43 @@
                 }
             }
 
-            // MAPPE
-            let dep = data.origin.icao_code;
-            let arr = data.destination.icao_code;
-            let time = data.params.time_generated;
-            let baseUrl = "https://www.simbrief.com/ofp/uads/";
-            let filePrefix = `${dep}${arr}_UAD_${time}_`;
-
-            const injectMap = (pageId, suffix, debugLabel) => {
+            // --- 2. PARTE MAPPE (AGGIORNATA) ---
+            const injectMap = (pageId, filename, mapName) => {
                 let page = document.getElementById(pageId);
                 if(!page) return;
-                let fullUrl = `${baseUrl}${filePrefix}${suffix}`;
+                
+                // Base URL fissa di SimBrief
+                let baseUrl = "https://www.simbrief.com/ofp/uads/";
+                // Nome file preso direttamente dal JSON (es. GMFFLFTW_UAD_1770457581_SIGWX12.gif)
+                let fullUrl = baseUrl + filename;
+
                 let html = `
                     <div class="map-wrapper">
-                        <img src="${fullUrl}" class="wx-map-img" alt="Loading Map..." referrerpolicy="no-referrer">
-                        <div style="font-size:10px;color:#999;margin-bottom:5px;">File: ${filePrefix}${suffix}</div>
-                        <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN EXTERNAL MAP</a>
+                        <img src="${fullUrl}" class="wx-map-img" alt="${mapName}" referrerpolicy="no-referrer">
+                        <div style="font-size:10px;color:#999;margin-bottom:5px;">${mapName}</div>
+                        <a href="${fullUrl}" target="_blank" class="btn-open-map">OPEN MAP</a>
                     </div>
                 `;
                 page.innerHTML = html;
             };
 
-            injectMap('wx-page-1', 'SIGWX00.gif', 'SIGWX 1');
-            injectMap('wx-page-2', 'SIGWX00_B.gif', 'SIGWX 2');
-            injectMap('wx-page-3', 'WINDS30000.gif', 'WIND FL300');
-            injectMap('wx-page-4', 'WINDS34000.gif', 'WIND FL340');
-            injectMap('wx-page-5', 'WINDS39000.gif', 'WIND FL390');
-            injectMap('wx-page-6', 'PROFILE.gif', 'VERTICAL PROF');
+            // Controlla se esistono immagini nel JSON
+            if(data.images && data.images.map) {
+                // Assicura che sia un array
+                let maps = Array.isArray(data.images.map) ? data.images.map : [data.images.map];
+                
+                // CICLO SULLE MAPPE
+                // Partiamo da i = 1 per SALTARE la prima mappa (che è index 0 = Route)
+                // Assegniamo index 1 -> wx-page-1, index 2 -> wx-page-2, ecc.
+                for(let i = 1; i < maps.length; i++) {
+                     let mapObj = maps[i];
+                     let mapFile = mapObj.link; // Il nome file corretto (es. con il "12" finale)
+                     let mapName = mapObj.name; // Il nome descrittivo (es. SIGWX FL250-630)
+                     
+                     // Inietta solo se esiste il contenitore nella pagina (fino a wx-page-6)
+                     injectMap(`wx-page-${i}`, mapFile, mapName);
+                }
+            }
         }
 
         function creaBoxMeteo(label, codes, name, metar, taf, idUnico, elevation, stats, mTime, tTime, runwayHTML) {
@@ -825,7 +1067,152 @@
             if (el.style.display === "block") { el.style.display = "none"; chevron.classList.remove('up'); } else { el.style.display = "block"; chevron.classList.add('up'); }
         }
 
-        // --- FUEL PAGE LOGIC (MAIN & SUBPAGE) ---
+        function renderImpactsTable(impacts) {
+            const getData = (obj, key) => (obj && obj[key] !== undefined) ? obj[key] : null;
+            const fmtDiff = (burn, time) => {
+                if (burn === null || time === null) return `<td colspan="2">NOT AVAILABLE</td>`;
+                let burnVal = parseInt(burn);
+                let burnPrefix = burnVal >= 0 ? "P" : "M";
+                let burnStr = `TRIP ${burnPrefix}${String(Math.abs(burnVal)).padStart(4, '0')} KGS`; 
+                let timeVal = parseInt(time); 
+                let mins = Math.round(timeVal / 60);
+                let timePrefix = mins >= 0 ? "P" : "M";
+                let timeStr = `TIME ${timePrefix}${String(Math.abs(mins)).padStart(4, '0')}`; 
+                return `<td>${burnStr}</td><td>${timeStr}</td>`;
+            };
+            let plus2000 = impacts.plus_2000ft || {};
+            let minus2000 = impacts.minus_2000ft || {};
+            let plusZfw = impacts.zfw_plus_1000 || {};
+            let row1 = fmtDiff(getData(plus2000, 'burn_difference'), getData(plus2000, 'time_difference'));
+            let row2 = fmtDiff(getData(minus2000, 'burn_difference'), getData(minus2000, 'time_difference'));
+            let row3 = fmtDiff(getData(plusZfw, 'burn_difference'), getData(plusZfw, 'time_difference'));
+            return `
+                <table class="impacts-table">
+                    <tr style="border-bottom: 2px solid #555;">
+                        <th style="width: 40%;"></th>
+                        <th>TRIP</th>
+                        <th>TIME</th>
+                    </tr>
+                    <tr><td class="impact-label">FL CHANGE</td><td style="text-align:left;">2000 ABOVE</td>${row1}</tr>
+                    <tr><td class="impact-label">FL CHANGE</td><td style="text-align:left;">2000 BELOW</td>${row2}</tr>
+                    <tr><td class="impact-label">WEIGHT CHANGE UP 1.0</td><td></td>${row3}</tr>
+                </table>`;
+        }
+
+        function generateAlternateRows(data) {
+            let alts = [];
+            if (data.alternate) { alts = Array.isArray(data.alternate) ? data.alternate : [data.alternate]; }
+            let html = "";
+            alts.forEach((alt, index) => {
+                let rank = "C" + (index + 1);
+                let apt = alt.icao_code + "/" + alt.iata_code;
+                let trk = alt.track_mag || alt.track_true || "--";
+                let dst = alt.distance || "--";
+                let via = alt.route || "--";
+                let fl = alt.cruise_altitude ? Math.round(alt.cruise_altitude/100) : "--";
+                let mora = alt.mora || ""; 
+                let wc = alt.avg_wind_comp || "";
+                if(wc && !isNaN(wc)) { wc = (parseInt(wc) >= 0 ? "P" : "M") + String(Math.abs(parseInt(wc))).padStart(3,'0'); }
+                let time = formatDuration(alt.ete);
+                let fuel = alt.burn;
+                html += `<tr><td>${rank}</td><td style="font-weight:600;">${apt}</td><td>${trk}</td><td>${dst}</td><td style="text-align:left; font-size:11px;">${via}</td><td>${fl}</td><td>${mora}</td><td>${wc}</td><td>${time}</td><td>${fuel}</td></tr>`;
+            });
+            return html;
+        }
+
+        function extractWinds(data) {
+            let sourceText = "";
+            if (data.text && data.text.plan_text) { sourceText = data.text.plan_text; } 
+            else {
+                let container = document.getElementById('ofp-text-container');
+                if(container) sourceText = container.innerText;
+            }
+            if (!sourceText) return "<div style='text-align:center; padding:10px;'>WIND DATA NOT AVAILABLE</div>";
+
+            let startIdx = sourceText.indexOf("WIND INFORMATION");
+            if (startIdx === -1) return "<div style='text-align:center; padding:10px;'>WIND SECTION NOT FOUND</div>";
+            let endIdx = sourceText.indexOf("ATC FLIGHT PLAN", startIdx);
+            if (endIdx === -1) endIdx = sourceText.indexOf("ICAO FLIGHT PLAN", startIdx);
+            if (endIdx === -1) endIdx = startIdx + 3000;
+
+            let windBlock = sourceText.substring(startIdx, endIdx);
+            windBlock = windBlock.replace("WIND INFORMATION", "").replace(/----------------/g, "").trim();
+            windBlock = windBlock.replace(/DESCENT/g, "<b>DESCENT</b>");
+
+            return `<div class="wind-raw-text">${windBlock}</div>`;
+        }
+
+        function toggleWindInfo() {
+            let content = document.getElementById('wind-info-content');
+            let arrow = document.getElementById('wind-arrow');
+            if(content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotated');
+            } else {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotated');
+            }
+        }
+function aggiornaWaypoints(data) {
+            if (!data.navlog || !data.navlog.fix) return;
+            
+            let fixes = Array.isArray(data.navlog.fix) ? data.navlog.fix : [data.navlog.fix];
+            
+            let maxMora = 0; 
+            let maxMoraAt = "";
+            let maxShr = 0; 
+            let maxShrAt = "";
+            
+            // Recupera codice aeroporto partenza
+            let depCode = (data.origin && data.origin.iata_code) ? data.origin.iata_code : "DEP";
+
+            fixes.forEach((f, index) => {
+                // --- 1. DEFINIZIONE NOMI ---
+                
+                // Nome del punto corrente (es. NARGO)
+                // Se f.ident è vuoto (capita col TOC/TOD o Departure), prova f.name, o usa fallback
+                let currentIdent = f.ident;
+                if (!currentIdent || currentIdent.trim() === "") {
+                    currentIdent = f.name || f.type || "WPT"; 
+                    if (index === 0) currentIdent = depCode;
+                }
+
+                // Nome del punto precedente (per la MORA)
+                let prevIdent = "";
+                if (index === 0) {
+                    prevIdent = depCode;
+                } else {
+                    let prevF = fixes[index - 1];
+                    prevIdent = prevF.ident || prevF.name || "WPT";
+                }
+
+                // --- 2. CALCOLO MORA (Logica Shift X-1 che ti piaceva) ---
+                let m = parseInt(f.mora);
+                if (!isNaN(m) && m > maxMora) {
+                    maxMora = m;
+                    maxMoraAt = prevIdent; 
+                }
+                
+                // --- 3. CALCOLO SHEAR (Logica Diretta - Nessuno Shift) ---
+                let s = parseInt(f.shear);
+                if (!isNaN(s)) {
+                    // Usa >= per prendere l'ultimo punto in caso di pareggio, o > per il primo. 
+                    // Uso > qui per prendere il primo che incontra.
+                    if (s > maxShr) {
+                        maxShr = s;
+                        maxShrAt = currentIdent;
+                    }
+                }
+            });
+
+            // Se per caso lo shear è 0, mostriamo comunque 0
+            if (maxShrAt === "") maxShrAt = depCode;
+
+            let html = `MOST CRITICAL MORA <b>${maxMora}</b> AT ${maxMoraAt} / MXSHR ${maxShr} AT ${maxShrAt}`;
+            
+            let container = document.getElementById('wpt-critical-info');
+            if(container) container.innerHTML = html;
+        }
         function aggiornaFuelPage(data) {
             let f = data.fuel;
             let plannedBlock = f.plan_ramp || 0;
@@ -851,21 +1238,12 @@
                         <div class="fmg-header">(MTOW)</div>
                         <div class="fmg-header" style="text-transform:none;">eLW</div>
                         <div class="fmg-header">(MLW)</div>
-
                         <div class="fmg-cell text-normal">${(data.weights.est_tow / 1000).toFixed(1)}</div>
                         <div class="fmg-cell text-normal">${(data.weights.max_tow / 1000).toFixed(1)}</div>
                         <div class="fmg-cell text-normal">${(data.weights.est_ldw / 1000).toFixed(1)}</div>
                         <div class="fmg-cell text-normal">${(data.weights.max_ldw / 1000).toFixed(1)}</div>
-
-                        <div class="fmg-header">GND DIST</div> 
-                        <div class="fmg-header"></div>          
-                        <div class="fmg-header"></div>          
-                        <div class="fmg-header"></div>          
-
-                        <div class="fmg-cell text-bold">${data.general.route_distance}</div>
-                        <div class="fmg-cell"></div>
-                        <div class="fmg-cell"></div>
-                        <div class="fmg-cell"></div>
+                        <div class="fmg-header">GND DIST</div><div class="fmg-header"></div><div class="fmg-header"></div><div class="fmg-header"></div>
+                        <div class="fmg-cell text-bold">${data.general.route_distance}</div><div class="fmg-cell"></div><div class="fmg-cell"></div><div class="fmg-cell"></div>
                     </div>
                 </div>
 
@@ -885,7 +1263,6 @@
                         <div class="fmg-header">DEP</div>
                         <div class="fmg-header">ARR</div>
                         <div class="fmg-header">CALLSIGN</div>
-
                         <div class="fmg-cell text-bold">${data.origin.icao_code}</div>
                         <div class="fmg-cell text-bold">${data.destination.icao_code}</div>
                         <div class="fmg-cell text-bold">${data.atc.callsign}</div>
@@ -904,7 +1281,6 @@
                         <div class="fmg-header" style="text-align:left; padding-left:20px;"><span class="text-bold" style="text-transform:none;">eZFW</span></div>
                         <div class="fmg-header"><span class="text-normal">(MZFW)</span></div>
                         <div class="fmg-header" style="text-align:right; padding-right:20px;"><span class="text-bold">CRZ ALT</span></div>
-
                         <div class="fmg-cell text-bold" style="text-align:left; padding-left:20px;">${(data.weights.est_zfw / 1000).toFixed(1)}</div>
                         <div class="fmg-cell text-normal">${(data.weights.max_zfw / 1000).toFixed(1)}</div>
                         <div class="fmg-cell text-normal" style="text-align:right; padding-right:20px;">${Math.floor(data.general.initial_altitude / 100)}</div>
@@ -912,18 +1288,13 @@
                         <div class="fmg-header" style="text-align:left; padding-left:20px;"><span class="text-bold">RESERVES</span></div>
                         <div class="fmg-header"><span class="text-normal">(ALTN)</span></div>
                         <div class="fmg-header" style="text-align:right; padding-right:20px;"><span class="text-bold">CRZ WIND</span></div>
-
-                        <div class="fmg-cell text-normal" style="text-align:left; padding-left:20px;">
-                            ${((parseInt(f.reserve)+parseInt(f.alternate_burn))/1000).toFixed(1)} 
-                            (${parseInt(f.reserve)+parseInt(f.alternate_burn)})
-                        </div>
+                        <div class="fmg-cell text-normal" style="text-align:left; padding-left:20px;">${((parseInt(f.reserve)+parseInt(f.alternate_burn))/1000).toFixed(1)} (${parseInt(f.reserve)+parseInt(f.alternate_burn)})</div>
                         <div class="fmg-cell text-normal" id="alt-code-disp">--</div>
                         <div class="fmg-cell text-normal" id="toc-wind-disp" style="text-align:right; padding-right:20px;">--/--</div>
 
                         <div class="fmg-header" style="text-align:left; padding-left:20px;"><span class="text-bold">COST INDEX</span></div>
                         <div class="fmg-header"></div>
                         <div class="fmg-header" style="text-align:right; padding-right:20px;"><span class="text-bold">ISA DEV</span></div>
-
                         <div class="fmg-cell text-normal" id="ci-disp" style="text-align:left; padding-left:20px;">--</div>
                         <div class="fmg-cell"></div>
                         <div class="fmg-cell text-normal" id="isa-dev-disp" style="text-align:right; padding-right:20px;">P000</div>
@@ -934,7 +1305,6 @@
                     <div class="fuel-main-grid" style="grid-template-columns: 1fr 1fr;">
                         <div class="fmg-header">AVG WIND</div>
                         <div class="fmg-header">FL STEPS</div>
-                        
                         <div class="fmg-cell text-normal">${data.general.avg_wind_dir}/${data.general.avg_wind_spd}</div>
                         <div class="fmg-cell text-normal">${data.general.stepclimb_string}</div>
                     </div>
@@ -965,6 +1335,26 @@
                         <div class="fmg-cell" style="padding:0; border:none;">
                             ${renderImpactsTable(data.impacts)}
                         </div>
+                    </div>
+                </div>
+
+                <div class="section-box-full">
+                    <div class="fuel-main-grid cols-1">
+                         <div class="fmg-header">ARRIVAL ATIS</div>
+                         <div class="fmg-cell" style="display:flex; justify-content:space-around; align-items:center; padding:15px; min-height:50px;">
+                             <div id="atis-arr-summary-display" style="flex-grow: 1; display: flex; justify-content: space-around; align-items: center; font-size:22px; font-weight:700;"></div> 
+                             <a href="#" class="link-text" onclick="apriArrAtisPage()" style="white-space:nowrap; margin-left: 20px;">Arrival ATIS &gt;</a>
+                         </div>
+                    </div>
+                </div>
+
+                <div class="section-box-full">
+                    <div class="fmg-header" style="text-align:left; padding-left:20px; cursor:pointer; display:flex; justify-content:space-between;" onclick="toggleWindInfo()">
+                        <span>WIND INFORMATION</span>
+                        <span id="wind-arrow" class="wind-arrow">&#9660;</span>
+                    </div>
+                    <div id="wind-info-content" class="fmg-cell hidden" style="padding:15px; text-align:left; border:none;">
+                        ${extractWinds(data)}
                     </div>
                 </div>
             `;
@@ -1004,99 +1394,6 @@
             syncAtisSummary();
         }
 
-        // Generate Alternate Rows (BOLD APT)
-        function generateAlternateRows(data) {
-            let alts = [];
-            if (data.alternate) {
-                alts = Array.isArray(data.alternate) ? data.alternate : [data.alternate];
-            }
-            
-            let html = "";
-            alts.forEach((alt, index) => {
-                let rank = "C" + (index + 1);
-                let apt = alt.icao_code + "/" + alt.iata_code;
-                let trk = alt.track_mag || alt.track_true || "--";
-                let dst = alt.distance || "--";
-                let via = alt.route || "--";
-                let fl = alt.cruise_altitude ? Math.round(alt.cruise_altitude/100) : "--";
-                let mora = alt.mora || ""; 
-                let wc = alt.avg_wind_comp || "";
-                
-                if(wc && !isNaN(wc)) {
-                    wc = (parseInt(wc) >= 0 ? "P" : "M") + String(Math.abs(parseInt(wc))).padStart(3,'0');
-                }
-                
-                let time = formatDuration(alt.ete);
-                let fuel = alt.burn;
-
-                html += `<tr>
-                    <td>${rank}</td>
-                    <td style="font-weight:600;">${apt}</td>
-                    <td>${trk}</td>
-                    <td>${dst}</td>
-                    <td style="text-align:left; font-size:11px;">${via}</td>
-                    <td>${fl}</td>
-                    <td>${mora}</td>
-                    <td>${wc}</td>
-                    <td>${time}</td>
-                    <td>${fuel}</td>
-                </tr>`;
-            });
-            return html;
-        }
-
-        // Helper render Impacts (VERTICAL LINE + DARKER BOTTOM BORDER)
-        function renderImpactsTable(impacts) {
-            const getData = (obj, key) => (obj && obj[key] !== undefined) ? obj[key] : null;
-
-            const fmtDiff = (burn, time) => {
-                if (burn === null || time === null) return `<td colspan="2">NOT AVAILABLE</td>`;
-                
-                let burnVal = parseInt(burn);
-                let burnPrefix = burnVal >= 0 ? "P" : "M";
-                let burnStr = `TRIP ${burnPrefix}${String(Math.abs(burnVal)).padStart(4, '0')} KGS`; 
-
-                let timeVal = parseInt(time); // Seconds
-                let mins = Math.round(timeVal / 60);
-                let timePrefix = mins >= 0 ? "P" : "M";
-                let timeStr = `TIME ${timePrefix}${String(Math.abs(mins)).padStart(4, '0')}`; 
-                
-                return `<td>${burnStr}</td><td>${timeStr}</td>`;
-            };
-
-            let plus2000 = impacts.plus_2000ft || {};
-            let minus2000 = impacts.minus_2000ft || {};
-            let plusZfw = impacts.zfw_plus_1000 || {};
-
-            let row1 = fmtDiff(getData(plus2000, 'burn_difference'), getData(plus2000, 'time_difference'));
-            let row2 = fmtDiff(getData(minus2000, 'burn_difference'), getData(minus2000, 'time_difference'));
-            let row3 = fmtDiff(getData(plusZfw, 'burn_difference'), getData(plusZfw, 'time_difference'));
-
-            return `
-                <table class="impacts-table">
-                    <tr style="border-bottom: 2px solid #555;"> <th style="width: 40%;"></th>
-                        <th>TRIP</th>
-                        <th>TIME</th>
-                    </tr>
-                    <tr>
-                        <td class="impact-label">FL CHANGE</td>
-                        <td style="text-align:left;">2000 ABOVE</td>
-                        ${row1}
-                    </tr>
-                    <tr>
-                        <td class="impact-label">FL CHANGE</td>
-                        <td style="text-align:left;">2000 BELOW</td>
-                        ${row2}
-                    </tr>
-                    <tr>
-                        <td class="impact-label">WEIGHT CHANGE UP 1.0</td>
-                        <td></td>
-                        ${row3}
-                    </tr>
-                </table>
-            `;
-        }
-
         // --- ATIS LOGIC (FIXED) ---
         function apriAtisPage() {
             document.getElementById('page-details').classList.add('hidden');
@@ -1111,20 +1408,53 @@
         function syncAtisSummary() {
             let info = document.getElementById('atis-info').value.toUpperCase();
             let qnh = document.getElementById('atis-qnh').value;
-
-            // Conditional Logic & Layout
             let html = "";
             if(info) html += `<span>${info}</span>`;
             if(qnh) html += `<span>Q${qnh}</span>`;
-            
             document.getElementById('atis-summary-display').innerHTML = html;
         }
         
+        function toggleWindInfo() {
+            let content = document.getElementById('wind-info-content');
+            let arrow = document.getElementById('wind-arrow');
+            if(content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                arrow.classList.add('rotated');
+            } else {
+                content.classList.add('hidden');
+                arrow.classList.remove('rotated');
+            }
+        }
+        
+        function extractWinds(data) {
+            let sourceText = "";
+            if (data.text && data.text.plan_text) {
+                sourceText = data.text.plan_text;
+            } else {
+                let container = document.getElementById('ofp-text-container');
+                if(container) sourceText = container.innerText;
+            }
+
+            if (!sourceText) return "<div style='text-align:center; padding:10px;'>WIND DATA NOT AVAILABLE</div>";
+
+            let startIdx = sourceText.indexOf("WIND INFORMATION");
+            if (startIdx === -1) return "<div style='text-align:center; padding:10px;'>WIND SECTION NOT FOUND</div>";
+
+            let endIdx = sourceText.indexOf("ATC FLIGHT PLAN", startIdx);
+            if (endIdx === -1) endIdx = sourceText.indexOf("ICAO FLIGHT PLAN", startIdx);
+            if (endIdx === -1) endIdx = startIdx + 3000;
+
+            let windBlock = sourceText.substring(startIdx, endIdx);
+            windBlock = windBlock.replace("WIND INFORMATION", "").replace(/----------------/g, "").trim();
+            windBlock = windBlock.replace(/DESCENT/g, "<b>DESCENT</b>");
+
+            return `<div class="wind-raw-text">${windBlock}</div>`;
+        }
+
         function renderFuelPlanningSubpage(data) {
             let fpContent = document.getElementById('fuel-plan-content');
             let f = data.fuel;
             let plannedBlock = f.plan_ramp || 0;
-            // (Logica invariata)
             let trip = parseInt(f.enroute_burn || 0);
             let tripTime = formatDuration(data.times.est_time_enroute);
             let cont = parseInt(f.contingency || 0);
@@ -1379,6 +1709,156 @@
                 elArrDiff.style.color = diffArr >= 0 ? "green" : "red";
             }
         }
+        function rimuoviVolo(event, index) {
+            event.stopPropagation(); // Impedisce che il click apra il volo
+            if(confirm("Vuoi eliminare questo volo dalla memoria?")) {
+                elencoVoli.splice(index, 1); // Rimuove dalla lista
+                localStorage.setItem('efb_flight_history', JSON.stringify(elencoVoli)); // Aggiorna memoria
+                aggiornaTabellaVoli(); // Ridisegna la tabella
+            }
+        }
+        function aggiornaNavLogTable(data) {
+    var tbody = document.getElementById('navlog-body-content');
+    tbody.innerHTML = ""; // Pulisci tabella
+
+    if (!data.navlog || !data.navlog.fix) {
+        tbody.innerHTML = "<tr><td colspan='7'>No Navlog Data</td></tr>";
+        return;
+    }
+
+    var fixes = Array.isArray(data.navlog.fix) ? data.navlog.fix : [data.navlog.fix];
+    var taxiFuel = parseFloat(data.fuel.taxi || 0);
+
+    // --- RIGA 0: DEPARTURE ---
+    let fix0 = fixes[0];
+    
+    let flDep = ""; // FL Partenza Vuoto
+    let moraDep = fix0 ? Math.round(parseInt(fix0.mora)/100) : ""; // MORA Shiftata (del 1° punto)
+    
+    let efobDep = data.fuel.plan_takeoff || "-";
+    let pbrnDep = taxiFuel; // PBRN Partenza = Taxi Fuel
+
+    let rowOrigin = `
+        <tr class="navlog-row" style="background-color: #f8fbff;">
+            <td>
+                <div style="font-size:11px; color:#666;"></div>
+                <div class="wpt-bold">${data.origin.icao_code}</div>
+            </td>
+            <td>
+                <div>${flDep}</div>
+                <div style="font-size:11px; color:#666;">${moraDep}</div>
+            </td>
+            <td><div>-</div><div style="font-size:11px; color:#666;">-</div></td>
+            <td><div>-</div><div style="font-size:11px; color:#666;">-</div></td>
+            <td>
+                <div style="margin-bottom:2px;">00:00</div>
+                <input type="time" class="navlog-input" style="width:75px;">
+            </td>
+            <td>
+                <div style="margin-bottom:2px;">${efobDep}</div>
+                <input type="text" class="navlog-input" placeholder=""> </td>
+            <td>
+                <div style="margin-bottom:2px;">${pbrnDep}</div>
+                <input type="text" class="navlog-input" placeholder=""> </td>
+        </tr>
+    `;
+    tbody.innerHTML += rowOrigin;
+
+    // --- LOOP WAYPOINTS ---
+    fixes.forEach((f, index) => {
+        let ident = f.ident || f.name || "WPT";
+        let awy = f.via_airway || "DCT";
+        
+        // FL: Punto Corrente (No Shift)
+        let fl = f.altitude_feet ? Math.round(parseInt(f.altitude_feet)/100) : "";
+
+        // MORA: Punto Successivo (Shift)
+        let nextFix = fixes[index + 1];
+        let mora = nextFix ? Math.round(parseInt(nextFix.mora)/100) : "-";
+
+        let imt = f.track_mag || f.track_true || "";
+        let dis = f.distance || "";
+        let wind = (f.wind_dir && f.wind_spd) ? `${f.wind_dir}/${f.wind_spd}` : "";
+        let shr = f.shear || "0";
+
+        // TTLT 
+        let ttlt = "--:--";
+        let rawTime = f.time_total || f.time_total_enroute;
+        if (rawTime) {
+            let t = parseInt(rawTime);
+            let h = Math.floor(t / 3600);
+            let m = Math.floor((t % 3600) / 60);
+            ttlt = String(h).padStart(2, '0') + ":" + String(m).padStart(2, '0');
+        }
+
+        let efob = f.fuel_plan_onboard || f.efob || "";
+
+        let burnedEnroute = parseFloat(f.fuel_totalused || f.fuel_used || 0);
+        let pbrn = Math.round(taxiFuel + burnedEnroute);
+
+        let row = `
+            <tr class="navlog-row">
+                <td>
+                    <div style="font-size:11px; color:#666;">${awy}</div>
+                    <div class="wpt-bold">${ident}</div>
+                </td>
+                <td>
+                    <div>${fl}</div>
+                    <div style="font-size:11px; color:#666;">${mora}</div>
+                </td>
+                <td>
+                    <div>${imt}°</div>
+                    <div style="font-size:11px; color:#666;">${dis} NM</div>
+                </td>
+                <td>
+                    <div>${wind}</div>
+                    <div style="font-size:11px; color:#666;">${shr}</div>
+                </td>
+                <td>
+                    <div style="margin-bottom:2px;">${ttlt}</div>
+                    <input type="time" class="navlog-input" style="width:75px;">
+                </td>
+                <td>
+                    <div style="margin-bottom:2px;">${efob}</div>
+                    <input type="text" class="navlog-input" placeholder=""> </td>
+                <td>
+                    <div style="margin-bottom:2px;">${pbrn}</div>
+                    <input type="text" class="navlog-input" placeholder=""> </td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+}
+// --- ARRIVAL ATIS FUNCTIONS ---
+function apriArrAtisPage() {
+    document.getElementById('page-details').classList.add('hidden');
+    document.getElementById('subpage-arr-atis').classList.remove('hidden');
+    
+    // Pre-fill Arrival Airport se vuoto
+    let aptInput = document.getElementById('atis-arr-apt');
+    if(aptInput && !aptInput.value && datiVoloGlobali) {
+        aptInput.value = datiVoloGlobali.destination.iata_code;
+        syncArrAtisSummary();
+    }
+}
+
+function chiudiArrAtisPage() {
+    document.getElementById('subpage-arr-atis').classList.add('hidden');
+    document.getElementById('page-details').classList.remove('hidden');
+}
+
+function syncArrAtisSummary() {
+    let info = document.getElementById('atis-arr-info').value.toUpperCase();
+    let qnh = document.getElementById('atis-arr-qnh').value;
+    let rwy = document.getElementById('atis-arr-rwy').value;
+    
+    let html = "";
+    if(info) html += `<span>${info}</span>`;
+    if(rwy)  html += `<span>RWY ${rwy}</span>`; // Opzionale: mostra pista se vuoi
+    if(qnh)  html += `<span>Q${qnh}</span>`;
+    
+    document.getElementById('atis-arr-summary-display').innerHTML = html;
+}
     </script>
 </body>
 </html>
